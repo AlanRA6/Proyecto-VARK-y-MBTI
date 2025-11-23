@@ -1,0 +1,160 @@
+/* --- VARIABLES Y RESET --- */
+:root {
+    --bg-dark: #222222;      /* Fondo del header */
+    --bg-red: #a80000;       /* Rojo de las pestañas */
+    --bg-red-hover: #c90000; /* Rojo más claro al pasar el mouse */
+    --text-white: #ffffff;
+    --text-grey: #cccccc;
+    --tab-active: #f4f4f4;   /* Blanco de la pestaña activa */
+    --text-active: #222222;  /* Texto en la pestaña activa */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Arial', sans-serif; /* Tipografía limpia */
+    background-color: #f0f0f0; /* Fondo de la página para contraste */
+}
+
+/* --- HEADER GENERAL --- */
+.main-header {
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Centrado verticalmente en móvil */
+    padding: 1rem 1.5rem;
+    position: relative;
+    flex-wrap: wrap; /* Permite que el menú caiga debajo en móvil */
+}
+
+/* --- LOGO --- */
+.logo-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.logo-subtitle {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--text-grey);
+    font-style: italic;
+    margin-top: 2px;
+}
+
+/* --- BOTÓN HAMBURGUESA (MÓVIL) --- */
+.nav-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: block; /* Visible en móvil */
+}
+
+.hamburger {
+    display: block;
+    width: 30px;
+    height: 3px;
+    background-color: var(--text-white);
+    position: relative;
+}
+
+.hamburger::before,
+.hamburger::after {
+    content: '';
+    width: 30px;
+    height: 3px;
+    background-color: var(--text-white);
+    position: absolute;
+    left: 0;
+    transition: 0.3s;
+}
+
+.hamburger::before { top: -8px; }
+.hamburger::after { top: 8px; }
+
+/* --- NAVEGACIÓN (ESTILO MÓVIL) --- */
+.nav-menu {
+    width: 100%;
+    display: none; /* Oculto por defecto en móvil */
+    margin-top: 1rem;
+}
+
+.nav-menu.show {
+    display: block; /* Se muestra con JS */
+}
+
+.nav-menu ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column; /* Vertical en móvil */
+}
+
+.nav-link {
+    display: block;
+    text-decoration: none;
+    color: var(--text-white);
+    background-color: var(--bg-red); /* Fondo rojo en los botones */
+    padding: 1rem;
+    margin-bottom: 2px;
+    text-align: center;
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+.nav-link:hover {
+    background-color: var(--bg-red-hover);
+}
+
+.nav-link.active {
+    background-color: var(--tab-active);
+    color: var(--text-active);
+    font-weight: bold;
+}
+
+/* --- MEDIA QUERY: ESCRITORIO (Min-width 768px) --- */
+@media (min-width: 768px) {
+    .main-header {
+        padding: 0 2rem; /* Quitamos padding vertical para alinear abajo */
+        align-items: flex-end; /* Alineamos todo al fondo para efecto pestaña */
+        height: 100px; /* Altura fija para darle aire al logo */
+    }
+
+    .logo-container {
+        margin-bottom: 1.5rem; /* Separamos un poco del borde inferior */
+    }
+
+    .nav-toggle {
+        display: none; /* Ocultamos hamburguesa */
+    }
+
+    .nav-menu {
+        display: block; /* Siempre visible */
+        width: auto;
+        margin-top: 0;
+    }
+
+    .nav-menu ul {
+        flex-direction: row; /* Horizontal */
+        gap: 5px; /* Espacio entre pestañas */
+    }
+
+    .nav-link {
+        margin-bottom: 0;
+        padding: 0.8rem 1.5rem;
+        /* LA CLAVE DEL DISEÑO: Bordes redondeados solo arriba */
+        border-radius: 10px 10px 0 0; 
+        font-size: 0.9rem;
+    }
+    
+    /* Efecto hover para levantar un poco la pestaña */
+    .nav-link:hover {
+        padding-bottom: 1rem; 
+        margin-top: -0.2rem;
+    }
+}

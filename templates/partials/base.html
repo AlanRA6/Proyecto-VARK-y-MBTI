@@ -1,0 +1,64 @@
+{% load static %} 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Consulting Co.{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="logo-container">
+            <h1 class="logo-title">Quizzes Solutions</h1>
+            <span class="logo-subtitle">¡Conoce mejor a tus alumnos!</span>
+        </div>
+
+        <button class="nav-toggle" aria-label="Abrir menú">
+            <span class="hamburger"></span>
+        </button>
+
+        <nav class="nav-menu">
+            <ul>
+                <li>
+                    <a href="{% url 'home' %}" 
+                       class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                       Nosotros
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'services' %}" 
+                       class="nav-link {% if request.resolver_match.url_name == 'services' %}active{% endif %}">
+                       Servicios
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'contact' %}" 
+                       class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}">
+                       Contacto
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'login' %}" 
+                       class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}">
+                       Acceso
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <script src="{% static 'js/base.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

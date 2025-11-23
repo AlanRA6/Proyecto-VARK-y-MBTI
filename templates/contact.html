@@ -1,0 +1,94 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block title %}Contacto | Quizzes Solutions{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/contact.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="contact-header">
+    <div class="container">
+        <h2>Contáctanos</h2>
+        <p>¿Tienes dudas sobre la implementación VARK o MBTI? Estamos aquí para ayudarte.</p>
+    </div>
+</section>
+
+<div class="contact-wrapper container">
+    
+    <div class="form-column">
+        <form id="contact-form" action="https://formspree.io/f/mqajowpy" method="POST">
+            <div class="form-group">
+                <label for="name">Nombre Completo</label>
+                <input type="text" id="name" name="name" required placeholder="Ej. Prof. Juan Pérez">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Correo Institucional</label>
+                <input type="email" id="email" name="email" required placeholder="juan@escuela.edu">
+            </div>
+
+            <div class="form-group">
+                <label for="subject">Asunto</label>
+                <select id="subject" name="subject">
+                    <option value="Información General">Información General</option>
+                    <option value="Soporte Técnico">Soporte Técnico</option>
+                    <option value="Ventas / Cotización">Ventas / Cotización</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Mensaje</label>
+                <textarea id="message" name="message" rows="5" required placeholder="Escribe tu consulta aquí..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submit-btn">Enviar Mensaje</button>
+            
+            <p id="form-status" class="status-msg"></p>
+        </form>
+    </div>
+
+    <div class="info-column">
+        <div class="info-card">
+            <h3>Información de Contacto</h3>
+            
+            <div class="info-item">
+                <i class="fa-solid fa-location-dot"></i>
+                <div>
+                    <strong>Oficinas Centrales:</strong>
+                    <p>Av. Reforma 222, CDMX, México.</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                    <strong>Teléfono:</strong>
+                    <p>+52 (56) 1236 4737</p>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <i class="fa-solid fa-envelope"></i>
+                <div>
+                    <strong>Email:</strong>
+                    <p>hardtek.soluciones@hotmail.com</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3762.618593298732!2d-99.16422642519757!3d19.42887868184971!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d1ff33846b3299%3A0x1fd31328356b921e!2sReforma%20222!5e0!3m2!1ses-419!2smx!4v1763922099915!5m2!1ses-419!2smx" width="450" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/contact.js' %}"></script>
+{% endblock %}
