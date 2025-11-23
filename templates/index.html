@@ -1,0 +1,86 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block title %}Inicio | Quizzes Solutions{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/home.css' %}">{% endblock %}
+
+{% block content %}
+
+<section class="hero-banner">
+    <div class="hero-content">
+        <h2>Descubre el potencial real de tus alumnos</h2>
+        <p>Ofrecemos herramientas de diagnóstico VARK y MBTI para adaptar tu enseñanza y mejorar el rendimiento académico de manera integral.</p>
+        <a href="{% url 'services' %}" class="btn-dark">Ver Servicios</a>
+    </div>
+</section>
+
+<div class="main-container">
+    
+    <aside class="sidebar-left">
+        <article class="sidebar-block">
+            <h3>Novedades Docentes</h3>
+            <p><strong>La era de la enseñanza adaptativa:</strong> Estudios recientes demuestran que el 80% de los alumnos mejora significativamente sus calificaciones cuando el material didáctico coincide con su estilo de aprendizaje dominante, reduciendo la frustración en el aula.</p>
+            
+            <hr class="divider">
+
+            <p><strong>Actualización de Plataforma:</strong> Ya hemos integrado el módulo de <em>MBTI</em>. Ahora podrás identificar los distintos tipos de personalidad para entender si tus alumnos son introvertidos o extrovertidos y cómo prefieren procesar la información y tomar decisiones.</p>
+        </article>
+
+        <article class="sidebar-block" style="margin-top: 20px;">
+            <h4>¿Sabías que?</h4>
+            <p>El estilo "Kinestésico" es a menudo el más malinterpretado en las aulas tradicionales, confundido frecuentemente con falta de atención.</p>
+        </article>
+    </aside>
+
+    <section class="content-right">
+        <h3>Metodología VARK & MBTI</h3>
+        
+        <div class="content-article">
+            <div class="article-img">
+                <img src="{% static "img/reviewing.avif" %}" alt="Gráfico de estilos de aprendizaje">
+            </div>
+            
+            <div class="article-text">
+                <p><strong>Entendiendo el aprendizaje:</strong> No todos los alumnos procesan la información de la misma manera. Nuestra plataforma digitaliza el test VARK para identificar rápidamente los cuatro perfiles clave:</p>
+                <ul style="margin-top: 10px; margin-bottom: 10px; padding-left: 20px; list-style-type: square;">
+                    <li><strong>Visual:</strong> Aprenden mejor con gráficos y diagramas.</li>
+                    <li><strong>Auditivo:</strong> Prefieren escuchar explicaciones y debates.</li>
+                    <li><strong>Lecto-escritor:</strong> Dominan la información a través de textos.</li>
+                    <li><strong>Kinestésico:</strong> Necesitan práctica, movimiento y experiencia real.</li>
+                </ul>
+                <p>Al aplicar estos tests al inicio del ciclo escolar, obtendrás una radiografía completa de tu grupo para planear clases más dinámicas.</p>
+            </div>
+        </div>
+
+        <h3 class="mt-4">El Enfoque MBTI en la Educación</h3>
+        <p>Complementamos el diagnóstico con el indicador Myers-Briggs. Entender si un alumno es <strong>Introvertido o Extrovertido</strong>, o si toma decisiones basado en el <strong>Pensamiento o el Sentimiento</strong>, permite al docente formar equipos de trabajo equilibrados y gestionar mejor la dinámica social del salón de clases.</p>
+
+        <h3 class="mt-4">Beneficios Tangibles en el Aula</h3>
+        <p>El uso sistemático de herramientas psicométricas en la educación básica y media permite detectar barreras de aprendizaje a tiempo. Esto se traduce en una reducción del abandono escolar, un aumento en la participación activa de los estudiantes y una comunicación más fluida entre maestros y padres de familia al tener datos objetivos sobre el desarrollo del alumno.</p>
+    </section>
+
+</div>
+
+<section class="bottom-features">
+    <div class="feature-col">
+        <h4>Análisis de Datos</h4>
+        <p>Olvídate de calificar tests a mano. Nuestra plataforma genera reportes automáticos sobre el desempeño grupal. Puedes exportar reportes individuales en PDF para entregar a los padres.</p>
+    </div>
+    
+    <div class="feature-col">
+        <h4>Seguimiento Continuo</h4>
+        <p>La educación es un proceso vivo. Compara los resultados de inicio de curso con los de medio término para evaluar la evolución cognitiva y la madurez emocional de tus estudiantes.</p>
+    </div>
+    
+    <div class="feature-col">
+        <h4>Soporte Pedagógico</h4>
+        <p>No solo te damos números. Nuestro equipo de psicólogos educativos ofrece guías de interpretación para ayudarte a traducir los datos en estrategias didácticas reales.</p>
+    </div>
+</section>
+
+<footer class="site-footer">
+    <p>Nosotros | Servicios | Contacto | VARK | MBTI</p>
+    <p>© 2025 Quizzes Solutions. All rights reserved.</p>
+</footer>
+
+{% endblock %}

@@ -1,0 +1,154 @@
+/* --- HEADER --- */
+.contact-header {
+    background-color: #f4f4f4;
+    padding: 2rem 1rem;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 2rem;
+}
+
+.contact-header h2 {
+    color: #a80000;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+/* --- LAYOUT PRINCIPAL --- */
+.contact-wrapper {
+    display: flex;
+    flex-direction: column; /* Móvil primero */
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+/* --- FORMULARIO --- */
+.form-column {
+    flex: 2; /* El formulario ocupa más espacio */
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+/* Estilo de inputs estilo 'caja' limpio */
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+    background-color: #fff;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #a80000; /* Borde rojo al escribir */
+    outline: none;
+}
+
+.btn-submit {
+    background-color: #a80000;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.3s;
+    width: 100%; /* Botón ancho en móvil */
+}
+
+.btn-submit:hover {
+    background-color: #c90000;
+}
+
+.status-msg {
+    margin-top: 1rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* --- INFO COLUMN (DERECHA) --- */
+.info-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.info-card {
+    background: #f9f9f9;
+    padding: 2rem;
+    border: 1px solid #eee;
+    border-top: 3px solid #a80000; /* Detalle de marca */
+}
+
+.info-card h3 {
+    margin-bottom: 1.5rem;
+    color: #222;
+}
+
+.info-item {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    align-items: flex-start;
+}
+
+.info-item i {
+    color: #a80000;
+    font-size: 1.2rem;
+    margin-top: 3px;
+}
+
+.info-item p {
+    color: #666;
+    margin-top: 0.2rem;
+}
+
+/* --- MAPA SIMULADO --- */
+.fake-map {
+    width: 100%;
+    height: 250px;
+    background-color: #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    border: 1px solid #ccc;
+}
+
+.fake-map i {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+/* --- RESPONSIVE (Escritorio) --- */
+@media (min-width: 768px) {
+    .contact-wrapper {
+        flex-direction: row; /* Lado a lado */
+    }
+
+    .btn-submit {
+        width: auto; /* Botón tamaño normal */
+    }
+}

@@ -1,0 +1,215 @@
+/* --- HEADER DE PÁGINA --- */
+.page-header {
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #ddd;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.page-header h2 {
+    color: #a80000; /* Rojo Marca */
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+}
+
+.page-header p {
+    color: #666;
+    font-style: italic;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- GRID DE TARJETAS DE SERVICIO --- */
+.services-container {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+    display: flex;
+    flex-wrap: wrap; /* Para responsive */
+    gap: 2rem;
+    justify-content: center;
+}
+
+.service-card {
+    flex: 1 1 300px; /* Base de 300px, crece y encoge */
+    border: 1px solid #ccc;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra sutil estilo 2010 */
+}
+
+.card-header {
+    background-color: #333; /* Cabecera oscura */
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    border-bottom: 3px solid #a80000; /* Detalle rojo abajo del header */
+}
+
+.card-body {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.service-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.service-card:hover .brand-icon i {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+/* Color y tamaño para los íconos de FontAwesome */
+.brand-icon {
+    color: #a80000; /* El rojo de tu marca */
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Espacio entre los íconos (ej. entre el ojo y la oreja) */
+}
+
+.card-body ul {
+    text-align: left;
+    margin-top: 1rem;
+    padding-left: 1.5rem;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.card-body li {
+    margin-bottom: 0.5rem;
+}
+
+/* --- SECCIÓN DE PRECIOS (PRICING TABLE) --- */
+.pricing-section {
+    background-color: #e9e9e9; /* Fondo gris para diferenciar sección */
+    padding: 3rem 1.5rem;
+    text-align: center;
+    border-top: 1px dashed #ccc; /* Separador estilo clásico */
+}
+
+.pricing-section h3 {
+    color: #222;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.pricing-intro {
+    margin-bottom: 2rem;
+    color: #666;
+}
+
+.pricing-table {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column; /* Móvil primero */
+    gap: 1.5rem;
+}
+
+.price-col {
+    background: white;
+    border: 1px solid #ccc;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease; /* Transición suave para el JS */
+    transform: scale(1);
+    position: relative;
+    z-index: 1;
+}
+
+/* Estilo para la columna destacada */
+.price-col.featured {
+    border: 1px solid #a80000;
+    box-shadow: 0 0 25px rgba(168, 0, 0, 0.3); /* Sombra roja brillante */
+    transform: scale(1.05); /* Crece un poco */
+    z-index: 10; /* Se pone encima de las otras */
+}
+
+.price-col.featured .price-header {
+    background-color: #a80000; /* Header se vuelve rojo */
+}
+
+.price-col.featured .btn-price {
+    background-color: #a80000; /* Botón se vuelve rojo */
+}
+
+.price-col.featured .btn-price:hover {
+    background-color: #d60000; /* Rojo más claro al clickear */
+}
+
+.price-header {
+    padding: 1.5rem;
+    color: white;
+    background-color: #555; /* Gris por defecto */
+    transition: background-color 0.3s ease;
+}
+
+.grey-header { background-color: #555; }
+.red-header { background-color: #a80000; } /* El rojo de la marca */
+
+.price {
+    display: block;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+.price span {
+    font-size: 1rem;
+    font-weight: normal;
+}
+
+.price-features {
+    list-style: none;
+    padding: 1.5rem;
+    text-align: center;
+    color: #444;
+}
+
+.price-features li {
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.price-features li.disabled {
+    color: #aaa;
+    text-decoration: line-through;
+}
+
+.btn-price {
+    margin: 0 1.5rem 1.5rem 1.5rem;
+    padding: 0.8rem;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    background-color: #777; /* Botón gris por defecto */
+    transition: background-color 0.3s ease;
+}
+
+.grey-btn { background-color: #777; }
+.red-btn { background-color: #a80000; }
+.red-btn:hover { background-color: #c90000; }
+
+/* --- RESPONSIVE --- */
+@media (min-width: 768px) {
+    .pricing-table {
+        flex-direction: row; /* En escritorio se ponen lado a lado */
+        align-items: center; /* Alineados al centro vertical */
+    }
+    
+    /* El destacado se hace un poco más alto en escritorio */
+    .price-col.featured {
+        padding-top: 1rem; 
+        padding-bottom: 1rem;
+    }
+}
