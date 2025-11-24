@@ -1,5 +1,5 @@
 from django.db import models
-from teachers.models import Alumno
+from teachers.models import Alumno, Token
 
     
 class MBTIDimension(models.Model):
@@ -28,7 +28,7 @@ class PreguntasMBTI(models.Model):
 class FormularioControlMBTI(models.Model):
     alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE, null=True)
     fecha_completado = models.DateTimeField(auto_now_add=True)
-    token = models.CharField(max_length=255, unique=True)
+    token = models.ForeignKey(Token, on_delete=models.CASCADE, null=True)
     energia = models.CharField(max_length=1)     # E o I
     informacion = models.CharField(max_length=1) # S o N
     decisiones = models.CharField(max_length=1)  # T o F
@@ -44,13 +44,13 @@ class FormularioControlMBTI(models.Model):
 
 
 class MBTIRespuestaPregunta(models.Model):
-    control = models.ForeignKey(FormularioControlMBTI, on_delete=models.SET_NULL, null=True, related_name='respuestas')
-    pregunta = models.ForeignKey(PreguntasMBTI, on_delete=models.SET_NULL, null=True)
+    control = models.ForeignKey(FormularioControlMBTI, on_delete=models.CASCADE, null=True, related_name='respuestas')
+    pregunta = models.ForeignKey(PreguntasMBTI, on_delete=models.CASCADE, null=True)
     puntuacion_izquierda = models.IntegerField()  # 0–10 por ejemplo E/S/T/J
     puntuacion_derecha = models.IntegerField()    # 0–10 por ejemplo I/N/F/P
 
     def __str__(self):
-        return f"Resp {self.respuesta_encuesta.id} - Preg {self.pregunta.id}"
+        return f"Resp {self.puntuacion_izquierda}/{self.puntuacion_derecha} - Preg {self.pregunta.id}"
     
     class Meta:
         verbose_name = "Respuesta MBTI"

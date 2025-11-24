@@ -76,7 +76,6 @@
     <div class="reports-section">
         <div class="section-header">
             <h3><i class="fa-solid fa-brain"></i> Reportes MBTI</h3>
-            <button class="btn-action" title="Exportar CSV"><i class="fa-solid fa-download"></i></button>
         </div>
 
         <div class="table-container">
@@ -99,15 +98,15 @@
                             <span class="token-ref">{{ reporte.token.token|truncatechars:10 }}</span>
                         </td>
                         <td>
-                            <!-- Ejemplo de resultado MBTI -->
-                            <span class="badge" style="background-color: #2c3e50; color: white; font-size: 0.9rem;">
-                                {{ reporte.resultado_codigo }} <!-- Ej: INTJ -->
+                            <!-- Usamos tipo_resultante como indica tu modelo -->
+                            <span class="badge-mbti">
+                                {{ reporte.tipo_resultante }} 
                             </span>
                         </td>
-                        <td>{{ reporte.descripcion_breve }}</td>
+                        <!-- Usamos descripcion_breve o un placeholder si no existe -->
+                        <td>{{ reporte.descripcion_breve|default:"-" }}</td>
                         <td class="text-right">
                             <a href="#" class="btn-action"><i class="fa-solid fa-file-lines"></i></a>
-                            <button class="btn-action"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                     {% empty %}

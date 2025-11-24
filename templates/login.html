@@ -84,7 +84,7 @@
     });
 
     document.getElementById('mbti-btn').addEventListener('click', function() {
-        validateToken('/');
+        window.location.href = '{% url "mbti_test" %}';
     });
 </script>
 {% endblock %}
