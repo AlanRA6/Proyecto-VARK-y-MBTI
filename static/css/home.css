@@ -1,0 +1,230 @@
+/* --- ESTILOS ESPECÍFICOS PARA HOME --- */
+
+/* 1. HERO SECTION (Rojo degradado) */
+.hero-banner {
+    background: linear-gradient(135deg, #a80000 0%, #d60000 100%); /* Degradado rojo */
+    color: white;
+    padding: 3rem 2rem;
+    text-align: right; /* Texto a la derecha como en la imagen */
+    /* Puedes poner una imagen de fondo sutil aquí si tienes una */
+}
+
+.hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.hero-content h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.btn-dark {
+    background-color: #222;
+    color: white;
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    font-size: 0.9rem;
+    border-radius: 3px;
+    display: inline-block;
+    margin-top: 1rem;
+}
+
+/* 2. LAYOUT PRINCIPAL (Sidebar + Contenido) */
+.main-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    display: flex;
+    flex-direction: column; /* Móvil: Columna */
+    gap: 2rem;
+}
+
+/* Títulos rojos estilo imagen */
+h3 {
+    color: #a80000; /* Usamos el rojo de la marca */
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+}
+
+/* --- SIDEBAR IZQUIERDA --- */
+.sidebar-left {
+    flex: 1; /* Ocupa 1 parte del espacio */
+}
+
+.read-more {
+    font-size: 0.8rem;
+    color: #666;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    text-align: right;
+    margin-top: 0.5rem;
+}
+
+.divider {
+    border: 0;
+    border-top: 1px dashed #ccc;
+    margin: 1rem 0;
+}
+
+/* --- LOGIN BOX (Estilo Retro Gris) --- */
+.login-box {
+    background-color: #b0b0b0; /* Gris oscuro de la imagen */
+    padding: 1rem;
+    margin-top: 2rem;
+    border-radius: 4px;
+    color: #333;
+}
+
+.login-box h4 {
+    margin-bottom: 1rem;
+    color: #333;
+    border-bottom: 1px solid #999;
+}
+
+.login-box label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 0.2rem;
+}
+
+.login-box input[type="text"],
+.login-box input[type="password"] {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 0.8rem;
+    border: 1px solid #999;
+}
+
+.form-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-login {
+    background-color: #a80000; /* Botón Rojo */
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 3px;
+}
+
+.btn-login:hover {
+    background-color: #d60000;
+}
+
+/* --- COLUMNA DERECHA (Contenido) --- */
+.content-right {
+    flex: 2; /* Ocupa 2 partes del espacio (más ancha) */
+}
+
+.content-article {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.article-img img {
+    max-width: 100%;
+    border: 4px solid #fff;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+.mt-4 { margin-top: 2rem; }
+
+/* 3. SECCIÓN INFERIOR (Gris con Columnas) */
+.bottom-features {
+    background-color: #e0e0e0; /* Fondo gris claro */
+    padding: 2rem 1.5rem;
+    margin-top: 2rem;
+    
+    /* Layout Grid/Flex */
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.feature-col h4 {
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.feature-col p {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.4;
+}
+
+/* --- FOOTER --- */
+.site-footer {
+    background-color: #222;
+    color: #999;
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.8rem;
+}
+
+/* --- MEDIA QUERIES (ESCRITORIO) --- */
+@media (min-width: 768px) {
+    /* Layout de 2 columnas lado a lado */
+    .main-container {
+        flex-direction: row; 
+        /* Eliminamos el 'gap' del contenedor padre para manejar 
+           el espaciado manualmente con padding y que la línea quede centrada */
+        gap: 0; 
+    }
+    
+    .sidebar-left {
+        flex: 0 0 300px; /* Ancho fijo para el sidebar */
+        
+        /* --- AQUÍ ESTÁ LA LÍNEA DIVISORA --- */
+        border-right: 1px solid #ccc; /* Línea gris sólida */
+        
+        /* Espacio entre el texto del sidebar y la línea */
+        padding-right: 2rem; 
+    }
+
+    .content-right {
+        flex: 1; /* El resto del espacio */
+        
+        /* Espacio entre la línea y el contenido principal */
+        padding-left: 2rem; 
+    }
+
+    /* Imagen flotante dentro del artículo */
+    .content-article {
+        flex-direction: row;
+    }
+    
+    .article-img {
+        flex: 0 0 150px; /* Imagen ancho fijo */
+    }
+
+    /* 3 Columnas inferiores con líneas punteadas */
+    .bottom-features {
+        flex-direction: row;
+    }
+
+    .feature-col {
+        flex: 1;
+        padding: 0 1.5rem;
+        /* Línea punteada a la derecha */
+        border-right: 1px dotted #888; 
+    }
+
+    /* Quitar línea al último elemento */
+    .feature-col:last-child {
+        border-right: none;
+    }
+}

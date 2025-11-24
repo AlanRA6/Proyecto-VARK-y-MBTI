@@ -1,0 +1,90 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block title %}Acceso | Quizzes Solutions{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="login-wrapper">
+    <div class="login-card">
+        
+        <!-- SECCIÓN 1: ACCESO DOCENTES (Django Auth) -->
+        <div class="teacher-section">
+            <div class="section-header">
+                <h3>Acceso Docentes</h3>
+                <p>Ingresa tus credenciales administrativas</p>
+            </div>
+
+            <!-- Formulario conectado a Django -->
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                
+                <!-- Manejo de errores de Django -->
+                {% if form.errors %}
+                    <div class="error-message">
+                        <p>Usuario o contraseña incorrectos.</p>
+                    </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="id_username">Usuario</label>
+                    <!-- Django renderiza el input, pero lo estilamos con CSS -->
+                    {{ form.username }} 
+                </div>
+
+                <div class="form-group">
+                    <label for="id_password">Contraseña</label>
+                    {{ form.password }}
+                </div>
+
+                <button type="submit" class="btn-login">Ingresar al Portal</button>
+            </form>
+            
+            <div class="forgot-password">
+                <a href="#">¿Olvidaste tu contraseña?</a>
+            </div>
+        </div>
+
+        <!-- BARRA DIVISORIA -->
+        <div class="divider">
+            <span>O acceso directo a tests</span>
+        </div>
+
+        <!-- SECCIÓN 2: ACCESO ALUMNOS (Botones) -->
+        <div class="student-section">
+            <h3>Acceso Alumnos</h3>
+            <p>Selecciona el test asignado por tu profesor:</p>
+            
+            <div class="student-actions">
+                <button class="btn-student vark-btn" id="vark-btn">
+                    <i class="fa-solid fa-eye"></i>
+                    Ir a Test VARK
+                </button>
+                
+                <button class="btn-student mbti-btn" id="mbti-btn">
+                    <i class="fa-solid fa-brain"></i>
+                    Ir a Test MBTI
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.all.min.js"></script>
+<script>
+    document.getElementById('vark-btn').addEventListener('click', function() {
+        window.location.href = '{% url "vark_test" %}';
+    });
+
+    document.getElementById('mbti-btn').addEventListener('click', function() {
+        validateToken('/');
+    });
+</script>
+{% endblock %}

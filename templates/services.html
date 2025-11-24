@@ -1,0 +1,136 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block title %}Servicios | Quizzes Solutions{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/services.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+    <div class="container">
+        <h2>Nuestros Servicios Educativos</h2>
+        <p>Soluciones integrales de diagnóstico y seguimiento para instituciones de alto nivel.</p>
+    </div>
+</section>
+
+<section class="services-container">
+    
+    <div class="service-card">
+        <div class="card-header">
+            <h3>Diagnóstico VARK</h3>
+        </div>
+        <div class="card-body">
+            <div class="service-icon brand-icon">
+                <i class="fa-solid fa-eye"></i>
+                <i class="fa-solid fa-ear-listen"></i>
+                <i class="fa-solid fa-hand-pointer"></i>
+            </div> 
+            <p>Identificación precisa de los estilos de aprendizaje: Visual, Auditivo, Lecto-escritor y Kinestésico.</p>
+            <ul>
+                <li>Tests digitales automatizados.</li>
+                <li>Resultados inmediatos.</li>
+                <li>Guías de adaptación curricular.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="service-card">
+        <div class="card-header">
+            <h3>Perfil MBTI Escolar</h3>
+        </div>
+        <div class="card-body">
+            <div class="service-icon brand-icon">
+                <i class="fa-solid fa-brain"></i>
+                <i class="fa-solid fa-heart"></i>
+            </div>
+            <p>Evaluación de personalidad basada en Myers-Briggs para entender la dinámica social y emocional.</p>
+            <ul>
+                <li>Detección de introversión/extroversión.</li>
+                <li>Análisis de toma de decisiones.</li>
+                <li>Mejora la convivencia en el aula.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="service-card">
+        <div class="card-header">
+            <h3>Data Analytics</h3>
+        </div>
+        <div class="card-body">
+            <div class="service-icon brand-icon">
+                <i class="fa-solid fa-chart-line"></i>
+                <i class="fa-solid fa-file-pdf"></i>
+            </div>
+            <p>Tableros de control para directivos y psicopedagogos con métricas.</p>
+            <ul>
+                <li>Reportes grupales e individuales.</li>
+                <li>Exportación a PDF y Excel.</li>
+                <li>Deja de crear archivos Excel que terminan perdiéndose.</li>
+            </ul>
+        </div>
+    </div>
+
+</section>
+
+<section class="pricing-section">
+    <h3>Planes de Implementación</h3>
+    <p class="pricing-intro">Elige el plan que mejor se adapte al tamaño de tu institución.</p>
+
+    <div class="pricing-table" id="pricing-container">
+    
+        <div class="price-col">
+            <div class="price-header"> 
+                <h4>Básico</h4>
+                <span class="price">$299<span>/mo</span></span>
+            </div>
+            <ul class="price-features">
+                <li>1 cuenta de docente</li>
+                <li><strong>Pack Completo:</strong> VARK + MBTI</li>
+                <li><strong>25 tests</strong> al mes</li>
+                <li>Reportes básicos en PDF</li>
+                <li>Soporte técnico por Email</li>
+            </ul>
+            <button class="btn-price" onclick="window.location.href='{% url 'contact' %}'">Seleccionar</button>
+        </div>
+
+        <div class="price-col featured">
+            <div class="price-header">
+                <h4>Institucional</h4>
+                <span class="price">$6,799<span>/mo</span></span>
+            </div>
+            <ul class="price-features">
+                <li>Gestión de Campus (30 docentes)</li>
+                <li><strong>50 tests</strong> al mes por docente</li>
+                <li><strong>Pack Completo:</strong> VARK + MBTI</li>
+                <li>Comparativas de rendimiento anual</li>
+                <li>Exportación a Excel (CSV) y PDF</li>
+            </ul>
+            <button class="btn-price" onclick="window.location.href='{% url 'contact' %}'">Contratar Ahora</button>
+        </div>
+
+        <div class="price-col">
+            <div class="price-header">
+                <h4>Distrito</h4>
+                <span class="price">Contactar</span>
+            </div>
+            <ul class="price-features">
+                <li>Herramientas del institucional y +</li>
+                <li>Docentes <strong>ilimitados</strong></li>
+                <li>Tests <strong>ilimitados</strong></li>
+                <li>Integración API (Moodle / Canvas)</li>
+                <li>Capacitación docente presencial</li>
+            </ul>
+            <button class="btn-price" onclick="window.location.href='{% url 'contact' %}'">Cotizar</button>
+        </div>
+
+    </div>
+</section>
+
+{% block extra_js %}
+    <script src="{% static 'js/services.js' %}"></script>
+{% endblock %}
+{% endblock %}
