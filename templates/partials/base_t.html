@@ -61,7 +61,7 @@
                             </a>
                         </li>
                         <li>
-                            <a href="#" class="dash-link {% if request.resolver_match.url_name == 'search' %}active{% endif %}">
+                            <a id="search_link" href="#" class="dash-link {% if request.resolver_match.url_name == 'search' %}active{% endif %}">
                                 <i class="fa-solid fa-magnifying-glass"></i> <span>Buscar</span>
                             </a>
                         </li>
@@ -104,3 +104,103 @@
     {% block extra_js %}{% endblock %}
 </body>
 </html>
+<script>
+    const searchLink = document.getElementById('search_link');
+
+    searchLink.addEventListener('click', function(event){
+        event.preventDefault();
+        searchReport();
+    });
+
+    async function searchReport() {
+        const result = await Swal.fire({
+            title: 'Buscar Reporte',
+            html: `
+                <span>¡La función de buscar está limitada a búsquedas individuales!</span>
+                <select id="tipoReporte" class="swal2-select" style="width: 70%; margin-bottom: 10px;">
+                    <option value="">Seleccione un tipo de reporte</option>
+                    <option value="vark">VARK</option>
+                    <option value="mbti">MBTI</option>
+                </select>
+
+                <input id="tokenInput" class="swal2-input" placeholder="Token del reporte">
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Buscar',
+            cancelButtonText: 'Cancelar',
+            preConfirm: () => {
+                const tipo = document.getElementById('tipoReporte').value;
+                const token = document.getElementById('tokenInput').value;
+
+                if (!tipo) {
+                    Swal.showValidationMessage('Debe seleccionar el tipo de reporte');
+                    return false;
+                }
+                if (!token) {
+                    Swal.showValidationMessage('Debe ingresar un token');
+                    return false;
+                }
+
+                return { tipo, token };
+            }
+        });
+
+        // Si canceló, no seguimos
+        if (!result.isConfirmed) return;
+
+        const tipoReporte = result.value.tipo;
+        const tokenValue  = result.value.token;
+
+        // Ahora sí puedes usar await sin errores
+        const data = await searchData(tokenValue, tipoReporte);
+        if(data.error){
+            Swal.fire({
+                title: 'Error',
+                text: data.error,
+                icon: 'error'
+            });
+            return;
+        }
+        await mostrarSwals(data);
+    }
+
+
+    async function searchData(token, type){
+        const baseUrl = "{% url 'search_token' 'TOKEN_PLACEHOLDER' 'TYPE_PLACEHOLDER' %}";
+        const finalUrl = baseUrl.replace("TOKEN_PLACEHOLDER", token).replace("TYPE_PLACEHOLDER", type);
+        const response = await fetch(finalUrl);
+        if (response.ok) {
+            const data = await response.json();
+            return data;
+        } else {
+            const errorData = await response.json();
+            return errorData;
+        }
+    }
+
+    async function mostrarSwals(data) {
+        for (const item of data.reportes) {
+            const result = await Swal.fire({
+                title: 'Resultado',
+                html: `
+                    <p><strong>Alumno:</strong> ${item.alumno}</p>
+                    <p><strong>Fecha:</strong> ${item.fecha_completado}</p>
+                    <p><strong>ID:</strong> ${item.id}</p>
+                `,
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Ver Reporte',
+                cancelButtonText: 'Cerrar'
+            });
+            if (result.isConfirmed) {
+                let reportUrl = '';
+                if (item.tipo === 'vark') {
+                    reportUrl = "{% url 'vark_individual_report' 0 %}".replace('0', item.id);
+                } else if (item.tipo === 'mbti') {
+                    reportUrl = "{% url 'mbti_individual_report' 0 %}".replace('0', item.id);
+                }
+                window.open(reportUrl, "_blank");
+            }
+        }
+    }
+</script>
