@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test MBTI | Resultados</title>
+    
+    <!-- Reutilizamos estilos base -->
+    <link rel="stylesheet" href="{% static 'css/vark_styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mbti_result.css' %}">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="test-body">
+
+    <main class="test-container">
+        
+        <!-- 1. BARRA DE PROGRESO -->
+        <div class="progress-container">
+            <div class="step completed">
+                <div class="step-circle">1</div>
+                <span class="step-label">Tus Datos</span>
+            </div>
+            <div class="step-line completed"></div>
+            <div class="step completed">
+                <div class="step-circle">2</div>
+                <span class="step-label">Cuestionario</span>
+            </div>
+            <div class="step-line completed"></div>
+            <div class="step active">
+                <div class="step-circle">3</div>
+                <span class="step-label">Resultados</span>
+            </div>
+        </div>
+
+        <!-- 2. TARJETA DE RESULTADOS -->
+        <div class="test-card">
+            <div class="card-intro">
+                <h2><i class="fa-solid fa-brain"></i> Tu Perfil de Personalidad</h2>
+                <p>Hola <strong>{{ alumno.nombre }}</strong>, según tus respuestas, este es tu tipo MBTI:</p>
+            </div>
+
+            <!-- RESULTADO PRINCIPAL -->
+            <div class="mbti-hero">
+                <h1 class="mbti-code">{{ tipo_mbti }}</h1>
+                <p class="mbti-label">Tipo Dominante</p>
+            </div>
+
+            <!-- DESGLOSE DE DIMENSIONES -->
+            <div class="dimensions-grid">
+                
+                <!-- 1. ENERGÍA (E vs I) -->
+                <div class="dimension-row">
+                    <div class="dim-connector"></div>
+                    <div class="dim-title">Energía</div>
+                    
+                    <!-- Lado Izquierdo: Extrovertido -->
+                    <div class="pole {% if 'E' in tipo_mbti %}active-dim dim-energy{% endif %}">
+                        <i class="fa-solid fa-users"></i>
+                        <span>Extrovertido (E)</span>
+                    </div>
+
+                    <!-- Lado Derecho: Introvertido -->
+                    <div class="pole {% if 'I' in tipo_mbti %}active-dim dim-energy{% endif %}">
+                        <i class="fa-solid fa-user"></i>
+                        <span>Introvertido (I)</span>
+                    </div>
+                </div>
+
+                <!-- 2. INFORMACIÓN (S vs N) -->
+                <div class="dimension-row">
+                    <div class="dim-connector"></div>
+                    <div class="dim-title">Información</div>
+                    
+                    <div class="pole {% if 'S' in tipo_mbti %}active-dim dim-info{% endif %}">
+                        <i class="fa-solid fa-tree"></i>
+                        <span>Sensorial (S)</span>
+                    </div>
+
+                    <div class="pole {% if 'N' in tipo_mbti %}active-dim dim-info{% endif %}">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <span>Intuitivo (N)</span>
+                    </div>
+                </div>
+
+                <!-- 3. DECISIONES (T vs F) -->
+                <div class="dimension-row">
+                    <div class="dim-connector"></div>
+                    <div class="dim-title">Decisiones</div>
+                    
+                    <div class="pole {% if 'T' in tipo_mbti %}active-dim dim-decisions{% endif %}">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                        <span>Racional (T)</span>
+                    </div>
+
+                    <div class="pole {% if 'F' in tipo_mbti %}active-dim dim-decisions{% endif %}">
+                        <i class="fa-solid fa-heart"></i>
+                        <span>Emocional (F)</span>
+                    </div>
+                </div>
+
+                <!-- 4. ESTILO DE VIDA (J vs P) -->
+                <div class="dimension-row">
+                    <div class="dim-connector"></div>
+                    <div class="dim-title">Estilo de Vida</div>
+                    
+                    <div class="pole {% if 'J' in tipo_mbti %}active-dim dim-life{% endif %}">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span>Calificador (J)</span>
+                    </div>
+
+                    <div class="pole {% if 'P' in tipo_mbti %}active-dim dim-life{% endif %}">
+                        <i class="fa-solid fa-signs-post"></i>
+                        <span>Perceptivo (P)</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-actions" style="margin-top: 2.5rem;">
+                <a href="/" class="btn-start" style="text-decoration: none; background-color: #2c3e50;">
+                    Finalizar <i class="fa-solid fa-house"></i>
+                </a>
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

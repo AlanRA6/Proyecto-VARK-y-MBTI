@@ -1,0 +1,272 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test MBTI | Cuestionario</title>
+    
+    <!-- Reutilizamos los estilos del VARK -->
+    <link rel="stylesheet" href="{% static 'css/vark_styles.css' %}">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/mbti_test.css' %}">
+</head>
+<body class="test-body">
+
+    <main class="test-container">
+        
+        <!-- 1. BARRA DE PROGRESO -->
+        <div class="progress-container">
+            <div class="step active" id="step1">
+                <div class="step-circle">1</div>
+                <span class="step-label">Tus Datos</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step2">
+                <div class="step-circle">2</div>
+                <span class="step-label">Cuestionario</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step3">
+                <div class="step-circle">3</div>
+                <span class="step-label">Resultados</span>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 1: INTRO Y DATOS -->
+        <div class="test-card fade-in" id="introSection">
+            <div class="card-intro">
+                <h2 style="color: #2c3e50;">Bienvenido al Test MBTI</h2>
+                <p>Descubre tu tipo de personalidad y cómo tomas decisiones.</p>
+            </div>
+
+            <form id="introForm" class="student-id-form">
+                <div class="form-group">
+                    <label for="accessToken">Token de Acceso</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fa-solid fa-key"></i>
+                        <input type="text" id="accessToken" placeholder="Ingresa el código..." class="big-input" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="studentName">Nombre Completo</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="studentName" placeholder="Escribe tu nombre..." class="big-input" required>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/" class="btn-cancel">Cancelar</a>
+                    <button type="submit" class="btn-start">
+                        Comenzar Test <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- SECCIÓN 2: CUESTIONARIO -->
+        <div class="test-card fade-in" id="questionsSection" style="display: none;">
+            <div class="card-intro">
+                <h2 style="color: #2c3e50;">Cuestionario MBTI</h2>
+                <p>Distribuye <strong>10 puntos</strong> entre las dos opciones. No puedes usar el número 5 (empate).</p>
+            </div>
+
+            <form id="quizForm" method="POST" action="{% url 'mbti_results' %}">
+                {% csrf_token %}
+                
+                <input type="hidden" name="token" id="hiddenToken">
+                <input type="hidden" name="student_name" id="hiddenName">
+
+                <!-- BUCLE DE PREGUNTAS -->
+                {% for pregunta in preguntas %}
+                    <div class="question-block" data-id="{{ pregunta.id }}">
+                        <!-- El título raw se procesará con JS si contiene "/" -->
+                        <p class="question-title raw-title">{{ forloop.counter }}.- {{ pregunta.texto }}</p>
+                        
+                        
+                        <!-- Aquí JS inyectará los inputs si es pregunta de dimensión -->
+                    </div>
+                {% endfor %}
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-start">
+                        Finalizar Test <i class="fa-solid fa-check"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.all.min.js"></script>
+    <script>
+        // Referencias DOM
+        const introSection = document.getElementById('introSection');
+        const questionsSection = document.getElementById('questionsSection');
+        const introForm = document.getElementById('introForm');
+
+        // 1. Lógica de Inicialización del Test (Intro -> Preguntas)
+        introForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const tokenInput = document.getElementById('accessToken').value.trim();
+            const nameInput = document.getElementById('studentName').value.trim();
+
+            if (!tokenInput || !nameInput) {
+                Swal.fire({ icon: 'warning', title: 'Faltan datos', text: 'Por favor llena todos los campos.' });
+                return;
+            }
+
+            validateToken(tokenInput).then(isValid => {
+                if (isValid) {
+                    document.getElementById('hiddenToken').value = tokenInput;
+                    document.getElementById('hiddenName').value = nameInput;
+
+                    // Formatear preguntas especiales antes de mostrar
+                    renderDimensionQuestions();
+
+                    Swal.fire({
+                        icon: 'success', title: '¡Datos correctos!', text: 'Cargando cuestionario...',
+                        timer: 1000, showConfirmButton: false
+                    }).then(() => {
+                        introSection.style.display = 'none';
+                        questionsSection.style.display = 'block';
+                        document.getElementById('step1').classList.remove('active');
+                        document.getElementById('step1').classList.add('completed');
+                        document.getElementById('step2').classList.add('active');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                }
+            });
+        });
+
+        // 2. Función para transformar preguntas con "/"
+        function renderDimensionQuestions() {
+            const blocks = document.querySelectorAll('.question-block');
+            
+            blocks.forEach(block => {
+                const titleElem = block.querySelector('.raw-title');
+                const fullText = titleElem.innerText;
+                const questionId = block.getAttribute('data-id');
+
+                // Detectar si es pregunta de dimensión (contiene " / ")
+                if (fullText.includes(' / ')) {
+                    
+                    // Ocultar opciones de radio estándar si existen
+                    const standardOptions = block.querySelector('.options-group');
+                    if(standardOptions) standardOptions.style.display = 'none';
+
+                    // Limpiar el título para quitar el número inicial
+                    let textParts = fullText.split(' / ');
+                    let leftText = textParts[0]; 
+                    let rightText = textParts[1];
+
+                    // Crear estructura de inputs
+                    const container = document.createElement('div');
+                    container.className = 'dimension-container';
+
+                    // Crear cajas
+                    const leftBox = createInputBox(leftText, `q${questionId}_A`);
+                    const separator = document.createElement('div');
+                    separator.className = 'vs-separator';
+                    separator.innerText = '—';
+                    const rightBox = createInputBox(rightText, `q${questionId}_B`);
+
+                    container.appendChild(leftBox);
+                    container.appendChild(separator);
+                    container.appendChild(rightBox);
+                    
+                    block.appendChild(container);
+
+                    // --- LÓGICA DE VINCULACIÓN (Suma 10) ---
+                    const inputA = leftBox.querySelector('input');
+                    const inputB = rightBox.querySelector('input');
+
+                    linkInputs(inputA, inputB);
+                }
+            });
+        }
+
+        // Helper para crear la caja visual
+        function createInputBox(labelText, inputName) {
+            const box = document.createElement('div');
+            box.className = 'dimension-box';
+
+            const label = document.createElement('label');
+            label.className = 'dimension-label';
+            label.innerText = labelText.replace(/^\d+\.-\s*/, ''); // Limpiar número
+
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.name = inputName;
+            input.className = 'dimension-input';
+            input.placeholder = '0-10';
+            input.min = 0;
+            input.max = 10;
+            input.required = true;
+
+            box.appendChild(label);
+            box.appendChild(input);
+            return box;
+        }
+
+        // Helper para vincular lógica de dos inputs
+        function linkInputs(input1, input2) {
+            
+            const handleInput = (source, target) => {
+                let val = source.value;
+
+                // Si borra, borramos el otro
+                if (val === '') {
+                    target.value = '';
+                    return;
+                }
+
+                let num = parseInt(val);
+
+                // Validación Rango 0-10
+                if (num < 0 || num > 10) {
+                    Swal.fire({ icon: 'error', title: 'Rango inválido', text: 'Solo números del 0 al 10.', confirmButtonColor: '#2c3e50' });
+                    source.value = '';
+                    target.value = '';
+                    return;
+                }
+
+                // Validación Prohibido 5
+                if (num === 5) {
+                    Swal.fire({ icon: 'error', title: 'Valor no permitido', text: 'No puedes usar el 5 (empate). Debes tomar una postura.', confirmButtonColor: '#2c3e50' });
+                    source.value = '';
+                    target.value = '';
+                    return;
+                }
+
+                // Calcular complemento (Suma 10)
+                target.value = 10 - num;
+            };
+
+            input1.addEventListener('input', () => handleInput(input1, input2));
+            input2.addEventListener('input', () => handleInput(input2, input1));
+        }
+
+        // 3. Validación de Token
+        async function validateToken(token) {
+            const url = "{% url 'validate_token' 'TOKEN_PLACEHOLDER' %}".replace('TOKEN_PLACEHOLDER', token);
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                if (response.ok && data.valid) return true;
+                else {
+                    Swal.fire({ icon: 'error', title: 'Token Inválido', text: data.message || 'El token no existe o expiró.' });
+                    return false;
+                }
+            } catch(error) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Error de conexión.' });
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>

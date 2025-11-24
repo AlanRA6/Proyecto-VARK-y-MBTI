@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from .models import Token
 from VARK.models import FormularioControlVark
+from MBTI.models import FormularioControlMBTI
 import random
 import string
 from django.db.models import Sum, Max
@@ -74,12 +75,12 @@ def get_reports(request):
     tokens_grp = tokens.filter(token_type="GRUPAL")
 
     # ----------------------------
-    # 1. REPORTES INDIVIDUALES
+    # 1. REPORTES INDIVIDUALES VARK
     # ----------------------------
     reportes_ind = list(FormularioControlVark.objects.filter(token__in=tokens_ind))
 
     # ----------------------------
-    # 2. REPORTES GRUPALES (RESUMEN)
+    # 2. REPORTES GRUPALES VARK (RESUMEN)
     # ----------------------------
     agrupados = (
         FormularioControlVark.objects
@@ -122,6 +123,40 @@ def get_reports(request):
     # Ordenarlos por fecha (descendente)
     vark_reports.sort(key=lambda x: x.fecha_completado, reverse=True)
 
+
+    # REPORTES INDIVIDUALES MBTI
+    # ----------------------------
+    mbti_reports = list(FormularioControlMBTI.objects.filter(token__in=tokens_ind))
+
+    # REPORTES GRUPALES MBTI (RESUMEN)
+    agrupados_mbti = (
+        FormularioControlMBTI.objects
+        .filter(token__in=tokens_grp)
+        .values('token')
+        .annotate(
+            fecha=Max('fecha_completado')
+        )
+    )
+    mbti_reports_grp = []
+
+    for r in agrupados_mbti:
+        token_obj = Token.objects.get(id=r['token'])
+
+        # Crear un “objeto reporte” compatible con el template
+        class FakeMBTIReport:
+            pass
+
+        fr = FakeMBTIReport()
+        fr.fecha_completado = r['fecha']
+        fr.token = token_obj
+        fr.alumno = type("AlumnoFake", (), {"nombre": f"Grupo {token_obj.token}"})
+        fr.tipo_resultante = "Varios"
+
+        mbti_reports_grp.append(fr)
+
+    mbti_reports += mbti_reports_grp
+
     return render(request, 'reports_list.html', {
-        'vark_reports': vark_reports
+        'vark_reports': vark_reports,
+        'mbti_reports': mbti_reports
     })
