@@ -29,6 +29,11 @@ class FormularioControlMBTI(models.Model):
     alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE, null=True)
     fecha_completado = models.DateTimeField(auto_now_add=True)
     token = models.CharField(max_length=255, unique=True)
+    energia = models.CharField(max_length=1)     # E o I
+    informacion = models.CharField(max_length=1) # S o N
+    decisiones = models.CharField(max_length=1)  # T o F
+    estilo_vida = models.CharField(max_length=1) # J o P
+    tipo_resultante = models.CharField(max_length=4)  # ENFP, ISTJ, etc.
 
     def __str__(self):
         return f"Formulario MBTI {self.id} - {self.alumno}"
@@ -50,22 +55,3 @@ class MBTIRespuestaPregunta(models.Model):
     class Meta:
         verbose_name = "Respuesta MBTI"
         verbose_name_plural = "Respuestas MBTI"
-
-
-class MBTIResultado(models.Model):
-    encuestado = models.ForeignKey(Alumno, on_delete=models.CASCADE, null=True)
-    fecha = models.DateTimeField(auto_now_add=True)
-    control = models.ForeignKey(FormularioControlMBTI, on_delete=models.SET_NULL, null=True)
-    energia = models.CharField(max_length=1)     # E o I
-    informacion = models.CharField(max_length=1) # S o N
-    decisiones = models.CharField(max_length=1)  # T o F
-    estilo_vida = models.CharField(max_length=1) # J o P
-
-    tipo_resultante = models.CharField(max_length=4)  # ENFP, ISTJ, etc.
-
-    def __str__(self):
-        return f"{self.tipo_resultante} ({self.encuestado})"
-    
-    class Meta:
-        verbose_name = "Resultado MBTI"
-        verbose_name_plural = "Resultados MBTI"
