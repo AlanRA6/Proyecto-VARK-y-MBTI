@@ -56,7 +56,9 @@
                         </td>
                         
                         <td class="text-right">
-                            <a href="#" class="btn-action" title="Ver reporte completo"><i class="fa-solid fa-file-lines"></i></a>
+                            {% if reporte.token.token_type == "INDIVIDUAL" %}
+                            <a href="{% url 'vark_individual_report' reporte.id %}" class="btn-action" title="Ver reporte completo"><i class="fa-solid fa-file-lines"></i></a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% empty %}
@@ -85,7 +87,6 @@
                         <th>Fecha</th>
                         <th>Alumno / Token</th>
                         <th>Personalidad (Código)</th>
-                        <th>Eje Dominante</th>
                         <th class="text-right">Acciones</th>
                     </tr>
                 </thead>
@@ -103,11 +104,11 @@
                                 {{ reporte.tipo_resultante }} 
                             </span>
                         </td>
-                        <!-- Usamos descripcion_breve o un placeholder si no existe -->
-                        <td>{{ reporte.descripcion_breve|default:"-" }}</td>
+                        {% if reporte.token.token_type == "INDIVIDUAL" %}
                         <td class="text-right">
-                            <a href="#" class="btn-action"><i class="fa-solid fa-file-lines"></i></a>
+                            <a href="{% url 'mbti_individual_report' reporte.id %}" class="btn-action"><i class="fa-solid fa-file-lines"></i></a>
                         </td>
+                        {% endif %}
                     </tr>
                     {% empty %}
                     <tr>
