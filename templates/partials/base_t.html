@@ -46,7 +46,7 @@
                 <nav class="dash-nav">
                     <ul>
                         <li>
-                            <a href="#" class="dash-link {% if request.resolver_match.url_name == 'teachers_home' %}active{% endif %}">
+                            <a href="{% url 'teachers_home' %}" class="dash-link {% if request.resolver_match.url_name == 'teachers_home' %}active{% endif %}">
                                 <i class="fa-solid fa-house"></i> <span>Inicio</span>
                             </a>
                         </li>
