@@ -3,6 +3,8 @@ from django.shortcuts import render
 from .models import PreguntasMBTI, FormularioControlMBTI, MBTIDimension, MBTIRespuestaPregunta
 from teachers.models import Alumno, Token
 import re
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Avg, Q
 
 # Create your views here.
 def mbti_test(request):
@@ -11,6 +13,7 @@ def mbti_test(request):
     return render(request, 'mbti_test.html', context)
 
 def mbti_results(request):
+
     token = request.POST.get('token')
     name = request.POST.get('student_name')
 
@@ -98,3 +101,126 @@ def mbti_results(request):
     }
 
     return render(request, 'mbti_results.html', context)
+
+
+
+@login_required
+def dashboard_mbti(request):
+    """Vista principal del dashboard MBTI"""
+    user = request.user
+    tokens = Token.objects.filter(user=user)
+    
+    # Obtener el filtro de la URL (por defecto: total)
+    filtro = request.GET.get('filtro', 'total')
+    token_id = request.GET.get('token_id', None)
+    
+    context = {
+        'filtro': filtro,
+        'tokens_individuales': tokens.filter(token_type="INDIVIDUAL"),
+        'tokens_grupales': tokens.filter(token_type="GRUPAL"),
+    }
+    
+    return render(request, 'dashboards/mbti_dashboard.html', context)
+
+
+@login_required
+def dashboard_mbti_data(request):
+    """API endpoint para obtener datos del dashboard MBTI según filtros"""
+    user = request.user
+    filtro = request.GET.get('filtro', 'total')
+    token_id = request.GET.get('token_id', None)
+    
+    tokens = Token.objects.filter(user=user)
+    
+    # Filtrar según tipo
+    if filtro == 'individual':
+        formularios = FormularioControlMBTI.objects.filter(token__in=tokens.filter(token_type="INDIVIDUAL"))
+        if token_id:
+            formularios = formularios.filter(token_id=token_id)
+    elif filtro == 'grupal':
+        formularios = FormularioControlMBTI.objects.filter(token__in=tokens.filter(token_type="GRUPAL"))
+        if token_id:
+            formularios = formularios.filter(token_id=token_id)
+    else:  # total
+        formularios = FormularioControlMBTI.objects.filter(token__in=tokens)
+    
+    # 1. Distribución por tipo MBTI (16 tipos)
+    tipos_mbti = formularios.values('tipo_resultante').annotate(
+        total=Count('id')
+    ).order_by('-total')
+    
+    distribucion_tipos = {}
+    for tipo in tipos_mbti:
+        distribucion_tipos[tipo['tipo_resultante']] = tipo['total']
+    
+    # 2. Distribución por dimensiones individuales
+    distribucion_energia = {
+        'E': formularios.filter(energia='E').count(),
+        'I': formularios.filter(energia='I').count()
+    }
+    
+    distribucion_informacion = {
+        'S': formularios.filter(informacion='S').count(),
+        'N': formularios.filter(informacion='N').count()
+    }
+    
+    distribucion_decisiones = {
+        'T': formularios.filter(decisiones='T').count(),
+        'F': formularios.filter(decisiones='F').count()
+    }
+    
+    distribucion_estilo = {
+        'J': formularios.filter(estilo_vida='J').count(),
+        'P': formularios.filter(estilo_vida='P').count()
+    }
+    
+    # 3. Agrupación por temperamentos (Keirsey)
+    temperamentos = {
+        'Guardianes (SJ)': formularios.filter(informacion='S', estilo_vida='J').count(),
+        'Artesanos (SP)': formularios.filter(informacion='S', estilo_vida='P').count(),
+        'Idealistas (NF)': formularios.filter(informacion='N', decisiones='F').count(),
+        'Racionales (NT)': formularios.filter(informacion='N', decisiones='T').count()
+    }
+    
+    # 4. Agrupación por roles (Analistas, Diplomáticos, Centinelas, Exploradores)
+    roles = {
+        'Analistas (INT)': formularios.filter(energia='I', informacion='N', decisiones='T').count(),
+        'Diplomáticos (INF/ENF)': formularios.filter(Q(energia='I') | Q(energia='E'), informacion='N', decisiones='F').count(),
+        'Centinelas (ISJ/ESJ)': formularios.filter(Q(energia='I') | Q(energia='E'), informacion='S', estilo_vida='J').count(),
+        'Exploradores (ESP/ISP)': formularios.filter(Q(energia='I') | Q(energia='E'), informacion='S', estilo_vida='P').count()
+    }
+    
+    # 5. Top 5 tipos más comunes
+    top_tipos = list(tipos_mbti[:5])
+    
+    # 6. Evolución temporal
+    evolucion = formularios.order_by('fecha_completado').values(
+        'fecha_completado', 'tipo_resultante', 'energia', 'informacion', 
+        'decisiones', 'estilo_vida'
+    )[:20]
+    
+    # 7. Estadísticas generales
+    total_formularios = formularios.count()
+    
+    # 8. Top estudiantes (solo individual)
+    top_estudiantes = []
+    if filtro == 'individual':
+        estudiantes_data = formularios.values('alumno__nombre', 'tipo_resultante').annotate(
+            total_tests=Count('id')
+        ).order_by('-total_tests')[:5]
+        
+        top_estudiantes = list(estudiantes_data)
+    
+    return JsonResponse({
+        'distribucion_tipos': distribucion_tipos,
+        'distribucion_energia': distribucion_energia,
+        'distribucion_informacion': distribucion_informacion,
+        'distribucion_decisiones': distribucion_decisiones,
+        'distribucion_estilo': distribucion_estilo,
+        'temperamentos': temperamentos,
+        'roles': roles,
+        'top_tipos': top_tipos,
+        'evolucion': list(evolucion),
+        'total_formularios': total_formularios,
+        'top_estudiantes': top_estudiantes
+    })
