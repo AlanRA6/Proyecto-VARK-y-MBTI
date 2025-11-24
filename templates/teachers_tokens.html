@@ -1,0 +1,191 @@
+{% extends 'partials/base_t.html' %}
+{% load static %}
+
+{% block title %}Gestión de Tokens{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="tokens-layout">
+    
+    <!-- COLUMNA IZQUIERDA: CONFIGURACIÓN -->
+    <aside class="token-creator-card">
+        <div class="card-header">
+            <h3><i class="fa-solid fa-plus-circle"></i> Nuevo Token</h3>
+            <p>Configura un nuevo acceso para tus alumnos</p>
+        </div>
+
+        <form method="POST" class="token-form" action="javascript:postData();">
+            {% csrf_token %}
+
+            <!-- CAMPO 1: TIPO DE TOKEN -->
+            <div class="form-group">
+                <label for="tokenType">Tipo de Asignación</label>
+                <div class="select-wrapper">
+                    <select id="tokenType" name="type" required>
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        <option value="GRUPAL">Grupal (Agrupar múltiples alumnos)</option>
+                        <option value="INDIVIDUAL">Individual (Alumnos individuales)</option>
+                    </select>
+                </div>
+                <small class="hint">El sistema generará una llave única al guardar.</small>
+            </div>
+
+            <!-- CAMPO 2: EXPIRACIÓN -->
+            <div class="form-group">
+                <label for="expiration">Fecha de Expiración</label>
+                <input type="datetime-local" id="expiration" name="expiration" required>
+            </div>
+
+            <button type="submit" class="btn-create">
+                <i class="fa-solid fa-check"></i> Generar Token
+            </button>
+        </form>
+    </aside>
+
+
+    <!-- COLUMNA DERECHA: LISTADO -->
+    <section class="token-list-card">
+        <div class="card-header list-header">
+            <h3>Tokens Generados</h3>
+            
+            <div class="search-box">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" placeholder="Buscar token...">
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="tokens-table">
+                <thead>
+                    <tr>
+                        <th>Token</th>
+                        <th>Tipo</th>
+                        <th>Creado</th>
+                        <th>Expira</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for token in tokens %}
+
+                    <tr>
+                        <td>
+                            <div class="token-display">
+                                <!-- Aquí muestras el token que generó Django -->
+                                <span class="code-snippet">{{ token.token|slice:":12" }}...</span>
+                                <button class="btn-copy" onclick="copyToClipboard('{{ token.token }}')" title="Copiar">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                            </div>
+                        </td>
+                        {% if token.token_type == "GRUPAL" %}
+                            <td><span class="badge badge-group">Grupal</span></td>
+                        {% else %}
+                            <td><span class="badge badge-individual">Individual</span></td>
+                        {% endif %}
+                        <td>{{ token.created_at }}</td>
+                        <td class="text-danger">{{ token.expires_at }}</td>
+                    </tr>
+
+                    {% endfor %}          
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    
+    async function postData() {
+        const url = "{% url 'post_token' %}";
+        const formData = new FormData();
+        formData.append('token_type', document.getElementById('tokenType').value);
+        formData.append('expiration', document.getElementById('expiration').value);
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: formData
+        });
+        if (response.ok) {
+            const result = await response.json();
+            let resultSwal = await Swal.fire(
+                'Token Generado',
+                result.message + ': ' + result.token,
+                'success'
+            );
+            if (resultSwal.isConfirmed) {
+                location.reload();
+            }
+        } else {
+            const errorData = await response.json();
+            Swal.fire(
+                'Error',
+                errorData.error,
+                'error'
+            );
+        }
+    }
+
+    async function revokeToken(tokenId) {
+        let result = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Esta acción revocará el token seleccionado.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, revocar',
+            cancelButtonText: 'Cancelar'
+        });
+        if (result.isConfirmed) {
+            const url = "{% url 'revoke_token' %}";
+            const formData = new FormData();
+            formData.append('revoke_token_id', tokenId);
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: formData
+            });
+            if (response.ok) {
+                const result = await response.json();
+                Swal.fire(
+                    'Token Revocado',
+                    result.message,
+                    'success'
+                ).then(() => {
+                    location.reload();
+                });
+            } else {
+                const errorData = await response.json();
+                Swal.fire(
+                    'Error',
+                    errorData.error,
+                    'error'
+                );
+            }
+        }
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            Swal.fire(
+                'Copiado',
+                'El token ha sido copiado al portapapeles.',
+                'success'
+            );
+        });
+    }
+</script>
+{% endblock %}

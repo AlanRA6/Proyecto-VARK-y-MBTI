@@ -6,6 +6,7 @@
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
@@ -60,12 +61,12 @@
             <p>Selecciona el test asignado por tu profesor:</p>
             
             <div class="student-actions">
-                <button class="btn-student vark-btn">
+                <button class="btn-student vark-btn" id="vark-btn">
                     <i class="fa-solid fa-eye"></i>
                     Ir a Test VARK
                 </button>
                 
-                <button class="btn-student mbti-btn">
+                <button class="btn-student mbti-btn" id="mbti-btn">
                     <i class="fa-solid fa-brain"></i>
                     Ir a Test MBTI
                 </button>
@@ -74,4 +75,16 @@
 
     </div>
 </div>
+{% endblock %}
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.all.min.js"></script>
+<script>
+    document.getElementById('vark-btn').addEventListener('click', function() {
+        window.location.href = '{% url "vark_test" %}';
+    });
+
+    document.getElementById('mbti-btn').addEventListener('click', function() {
+        validateToken('/');
+    });
+</script>
 {% endblock %}

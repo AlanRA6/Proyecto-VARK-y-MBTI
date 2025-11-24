@@ -1,0 +1,233 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test VARK | Cuestionario</title>
+    <!-- Estilos específicos del Test -->
+    <link rel="stylesheet" href="{% static 'css/vark_styles.css' %}">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+        /* Estilos extra para las preguntas */
+        .question-block {
+            text-align: left;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1.5rem;
+        }
+        .question-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 6px;
+            transition: background 0.2s;
+            border: 1px solid transparent;
+        }
+        .option-label:hover {
+            background-color: #f9f9f9;
+            border-color: #eee;
+        }
+        .option-radio {
+            margin-top: 4px;
+            accent-color: #a80000; /* Color rojo marca */
+        }
+        /* Animación simple de entrada */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="test-body">
+    <main class="test-container">
+        
+        <!-- 1. BARRA DE PROGRESO -->
+        <div class="progress-container">
+            <div class="step active" id="step1">
+                <div class="step-circle">1</div>
+                <span class="step-label">Tus Datos</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step2">
+                <div class="step-circle">2</div>
+                <span class="step-label">Cuestionario</span>
+            </div>
+            <div class="step-line"></div>
+            <div class="step" id="step3">
+                <div class="step-circle">3</div>
+                <span class="step-label">Resultados</span>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 1: INTRO Y DATOS (Visible por defecto) -->
+        <div class="test-card fade-in" id="introSection">
+            <div class="card-intro">
+                <h2>Bienvenido al Test VARK</h2>
+                <p>Descubre cuál es tu estilo de aprendizaje dominante. Ingresa tus datos para comenzar.</p>
+            </div>
+
+            <form id="introForm" class="student-id-form">
+                <!-- Token -->
+                <div class="form-group">
+                    <label for="accessToken">Token de Acceso</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fa-solid fa-key"></i>
+                        <input type="text" id="accessToken" placeholder="Ingresa el código..." class="big-input" required>
+                    </div>
+                    <small>Código único proporcionado por tu docente.</small>
+                </div>
+                
+                <!-- Nombre -->
+                <div class="form-group">
+                    <label for="studentName">Nombre Completo</label>
+                    <div class="input-icon-wrapper">
+                        <i class="fa-solid fa-user"></i>
+                        <input type="text" id="studentName" placeholder="Escribe tu nombre..." class="big-input" required>
+                    </div>
+                    <small>Este nombre aparecerá en tu reporte final.</small>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/" class="btn-cancel">Cancelar</a>
+                    <button type="submit" class="btn-start">
+                        Comenzar Test <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- SECCIÓN 2: CUESTIONARIO (Oculto por defecto) -->
+        <div class="test-card fade-in" id="questionsSection" style="display: none;">
+            <div class="card-intro">
+                <h2>Cuestionario VARK</h2>
+                <p>Selecciona la opción que mejor describa tu comportamiento.</p>
+            </div>
+
+            <!-- Este formulario SÍ se enviará al backend -->
+            <form id="quizForm" method="POST" action="{% url 'vark_results' %}">
+                {% csrf_token %}
+                
+                <!-- Campos ocultos para transferir los datos de la sección 1 -->
+                <input type="hidden" name="token" id="hiddenToken">
+                <input type="hidden" name="student_name" id="hiddenName">
+
+                {% for pregunta in preguntas %}
+                    <div class="question-block">
+                        <p class="question-title">{{ pregunta.id }}.- {{ pregunta.texto }}</p>
+                        <div class="options-group">
+                            {% for opcion in pregunta.opcionrespuesta_set.all %}
+                            <label class="option-label">
+                                <input type="radio" name="q{{ pregunta.id }}" value="{{ opcion.categoria }}" class="option-radio" required>
+                                <span>{{opcion.inciso}}. {{ opcion.texto }}</span>
+                            </label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-start">
+                        Finalizar Test <i class="fa-solid fa-check"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.all.min.js"></script>
+    <script>
+
+        // Referencias DOM
+        const introSection = document.getElementById('introSection');
+        const questionsSection = document.getElementById('questionsSection');
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        
+        const introForm = document.getElementById('introForm');
+
+        // Evento "Comenzar"
+        introForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const tokenInput = document.getElementById('accessToken').value.trim();
+            const nameInput = document.getElementById('studentName').value.trim();
+
+            if (!tokenInput || !nameInput) {
+                Swal.fire({ icon: 'warning', title: 'Datos incompletos', text: 'Por favor llena todos los campos.' });
+                return;
+            }
+
+            // Simulamos la validación (o llama a tu función async real aquí)
+            validateToken(tokenInput).then(isValid => {
+                if (isValid) {
+                    document.getElementById('hiddenToken').value = tokenInput;
+                    document.getElementById('hiddenName').value = nameInput;
+
+                    // 2. Mensaje de éxito
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Datos correctos!',
+                        text: 'Cargando cuestionario...',
+                        timer: 1000,
+                        showConfirmButton: false
+                    }).then(() => {
+
+                        introSection.style.display = 'none';
+                        questionsSection.style.display = 'block';
+                        
+                        step1.classList.remove('active'); 
+                        step1.classList.add('completed'); 
+                        step2.classList.add('active');
+
+                        // Scroll arriba suavemente
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    });
+                }
+            });
+        });
+
+        // Tu función de validación original
+        async function validateToken(token) {
+            // Si quieres probar sin backend, cambia esto a 'return true;' temporalmente
+            // return true; 
+
+            const url = "{% url 'validate_token' 'TOKEN_PLACEHOLDER' %}".replace('TOKEN_PLACEHOLDER', token);
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (response.ok && data.valid) {
+                    return true;
+                } else {
+                    Swal.fire({ icon: 'error', title: 'Token Inválido', text: data.message || 'El token no existe o expiró.' });
+                    return false;
+                }
+            } catch(error) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudo conectar con el servidor.' });
+                return false;
+            }
+        }
+    </script>
+
+</body>
+</html>

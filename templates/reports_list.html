@@ -1,0 +1,127 @@
+{% extends 'partials/base_t.html' %}
+{% load static %}
+
+{% block title %}Reportes de Alumnos | Dashboard{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/report_list.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+    
+    <!-- SECCIÓN 1: REPORTES VARK -->
+    <div class="reports-section">
+        <div class="section-header">
+            <h3><i class="fa-solid fa-eye"></i> Reportes VARK</h3>
+        </div>
+
+        <div class="table-container">
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Alumno / Token</th>
+                        <th class="text-center" title="Visual">V</th>
+                        <th class="text-center" title="Auditivo">A</th>
+                        <th class="text-center" title="Lecto-Escritura">R</th>
+                        <th class="text-center" title="Kinestésico">K</th>
+                        <th>Individual / Grupal</th> 
+                        <th class="text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reporte in vark_reports %}
+                    <tr>
+                        <td>
+                            {{ reporte.fecha_completado|date:"d M Y" }}<br>
+                            <small class="text-muted">{{ reporte.fecha_completado|time:"H:i" }}</small>
+                        </td>
+                        <td>
+                            <span class="student-name">{{ reporte.alumno.nombre }}</span> <!-- Asumiendo alumno.nombre -->
+                            <span class="token-ref"><i class="fa-solid fa-key"></i> {{ reporte.token.token|truncatechars:10 }}</span>
+                        </td>
+                        
+                        <!-- Puntajes con colores -->
+                        <td class="text-center"><span class="score-badge bg-v">{{ reporte.resultado_visual }}</span></td>
+                        <td class="text-center"><span class="score-badge bg-a">{{ reporte.resultado_auditivo }}</span></td>
+                        <td class="text-center"><span class="score-badge bg-r">{{ reporte.resultado_lectura_escritura }}</span></td>
+                        <td class="text-center"><span class="score-badge bg-k">{{ reporte.resultado_kinestesico }}</span></td>
+                        
+                        <!-- Lógica simple para mostrar el mayor en el template (o mejor hacerlo en backend) -->
+                        <td>
+                            <!-- Esto es solo visual, idealmente tu modelo debería tener un método .get_dominant_style -->
+                            <span class="badge" style="background:#eee; color:#333;">{{ reporte.token.token_type }}</span>
+                        </td>
+                        
+                        <td class="text-right">
+                            <a href="#" class="btn-action" title="Ver reporte completo"><i class="fa-solid fa-file-lines"></i></a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="empty-state">
+                            <i class="fa-solid fa-folder-open" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                            <p>No hay reportes VARK registrados aún.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 2: REPORTES MBTI -->
+    <div class="reports-section">
+        <div class="section-header">
+            <h3><i class="fa-solid fa-brain"></i> Reportes MBTI</h3>
+            <button class="btn-action" title="Exportar CSV"><i class="fa-solid fa-download"></i></button>
+        </div>
+
+        <div class="table-container">
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Alumno / Token</th>
+                        <th>Personalidad (Código)</th>
+                        <th>Eje Dominante</th>
+                        <th class="text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reporte in mbti_reports %}
+                    <tr>
+                        <td>{{ reporte.fecha_completado|date:"d M Y" }}</td>
+                        <td>
+                            <span class="student-name">{{ reporte.alumno.nombre }}</span>
+                            <span class="token-ref">{{ reporte.token.token|truncatechars:10 }}</span>
+                        </td>
+                        <td>
+                            <!-- Ejemplo de resultado MBTI -->
+                            <span class="badge" style="background-color: #2c3e50; color: white; font-size: 0.9rem;">
+                                {{ reporte.resultado_codigo }} <!-- Ej: INTJ -->
+                            </span>
+                        </td>
+                        <td>{{ reporte.descripcion_breve }}</td>
+                        <td class="text-right">
+                            <a href="#" class="btn-action"><i class="fa-solid fa-file-lines"></i></a>
+                            <button class="btn-action"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="empty-state">
+                            <i class="fa-solid fa-folder-open" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                            <p>No hay reportes MBTI registrados aún.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,291 @@
+/* --- VARIABLES --- */
+:root {
+    --dash-bg-dark: #222222;
+    --dash-red: #a80000;
+    --dash-red-light: #d60000;
+    --dash-text-grey: #b0b0b0;
+    --dash-bg-body: #f4f6f8;
+    --white: #ffffff;
+    --header-height: 70px; /* Variable importante para el layout */
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--dash-bg-body);
+    color: #333;
+    padding-top: calc(var(--header-height) + 20px); /* Espacio para el header fijo */
+}
+
+/* --- HEADER PRINCIPAL --- */
+.dash-header {
+    background-color: var(--dash-bg-dark);
+    height: var(--header-height);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* --- BRAND & TOGGLE WRAPPER --- */
+.brand-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: auto; /* En móvil crecerá */
+}
+
+.dash-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon { font-size: 1.8rem; color: var(--dash-red); }
+
+.brand-text h1 {
+    font-size: 1.1rem;
+    color: var(--white);
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.badge {
+    font-size: 0.65rem;
+    background-color: #444;
+    color: var(--dash-text-grey);
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Botón Hamburguesa (Oculto en Desktop) */
+.dash-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 1rem;
+}
+
+/* --- CONTENEDOR COLAPSABLE (Escritorio por defecto) --- */
+.dash-collapse {
+    display: flex;
+    align-items: center; /* Centrado vertical de los hijos directos (nav y user-area) */
+    justify-content: space-between;
+    flex-grow: 1; 
+    margin-left: 3rem; 
+}
+
+/* --- NAVEGACIÓN --- */
+.dash-nav {
+    height: 100%; /* Asegura que el nav ocupe toda la altura disponible */
+    display: flex; /* Convierte al nav en flex también */
+    align-items: center; /* Centra la lista UL verticalmente */
+}
+
+.dash-nav ul {
+    list-style: none;
+    display: flex;
+    align-items: center; /* Centra los LI verticalmente dentro del UL */
+    gap: 2rem;
+    height: 100%; /* Hereda altura */
+    margin: 0; /* Asegura que no haya márgenes extraños */
+}
+
+.dash-link {
+    text-decoration: none;
+    color: var(--dash-text-grey);
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center; /* Centra icono y texto dentro del enlace */
+    gap: 8px;
+    height: var(--header-height); /* Altura fija igual al header */
+    padding: 0 5px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+    
+    /* Hack para centrar visualmente mejor si la fuente tiene baseline extraña */
+    line-height: 1; 
+}
+
+/* --- NAVEGACIÓN --- */
+.dash-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+}
+
+.dash-link {
+    text-decoration: none;
+    color: var(--dash-text-grey);
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: var(--header-height); /* Altura completa del header */
+    padding: 0 5px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.dash-link:hover { color: var(--white); }
+
+.dash-link.active {
+    color: var(--white);
+    border-bottom-color: var(--dash-red);
+}
+
+.dash-link.active i { color: var(--dash-red); }
+
+/* --- ÁREA DE USUARIO --- */
+.user-area {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-left: 20px;
+    border-left: 1px solid #444; /* Separador vertical */
+}
+
+.user-info { text-align: right; line-height: 1.2; }
+.user-name { display: block; color: var(--white); font-size: 0.9rem; font-weight: 600; }
+.user-role { display: block; color: var(--dash-text-grey); font-size: 0.75rem; }
+
+.v-line { display: none; } /* Ocultamos la v-line original por CSS nuevo */
+
+.logout-text-mobile { display: none; }
+
+.btn-logout {
+    background: transparent;
+    border: 1px solid #444;
+    color: var(--dash-text-grey);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.btn-logout:hover {
+    background-color: var(--dash-red);
+    color: white;
+    border-color: var(--dash-red);
+    transform: rotate(90deg);
+}
+
+/* --- MAIN CONTENT CONTAINER --- */
+.dash-main {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+    min-height: 80vh;
+}
+
+/* =========================================
+   RESPONSIVE (MÓVIL / TABLET VERTICAL)
+   ========================================= */
+@media (max-width: 850px) {
+    .header-content {
+        padding: 0 1rem;
+        /* Permitir wrap para que el menú caiga abajo */
+        flex-wrap: wrap; 
+        align-content: center;
+    }
+
+    .brand-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        height: var(--header-height); /* Altura fija para la barra superior */
+    }
+
+    .dash-toggle { display: block; }
+
+    /* Estilo del menú desplegable */
+    .dash-collapse {
+        display: none; /* Oculto por defecto */
+        position: absolute;
+        top: var(--header-height);
+        left: 0;
+        width: 100%;
+        background-color: var(--dash-bg-dark);
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0;
+        margin: 0;
+        border-top: 1px solid #333;
+        box-shadow: 0 10px 15px rgba(0,0,0,0.3);
+    }
+
+    /* Clase que agrega JS para mostrar menú */
+    .dash-collapse.show { display: flex; }
+
+    /* Ajustes Navegación Móvil */
+    .dash-nav { width: 100%; }
+    .dash-nav ul {
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+    }
+
+    .dash-link {
+        width: 100%;
+        height: auto;
+        padding: 1.2rem 1.5rem;
+        border-bottom: 1px solid #333;
+        border-left: 4px solid transparent; /* Indicador lateral */
+    }
+
+    /* Mostrar texto en móvil siempre */
+    .dash-link span { display: inline !important; }
+
+    .dash-link.active {
+        background-color: #2a2a2a;
+        border-bottom-color: #333;
+        border-left-color: var(--dash-red);
+    }
+
+    /* Ajustes Usuario Móvil */
+    .user-area {
+        width: 100%;
+        padding: 1.5rem;
+        border-left: none;
+        flex-direction: row;
+        justify-content: space-between;
+        background-color: #1a1a1a;
+    }
+
+    .user-info { text-align: left; }
+
+    .btn-logout {
+        width: auto;
+        height: auto;
+        border-radius: 4px;
+        padding: 8px 15px;
+        gap: 8px;
+    }
+    
+    .logout-text-mobile { display: inline; font-size: 0.9rem; }
+}
