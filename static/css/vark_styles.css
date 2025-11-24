@@ -1,0 +1,290 @@
+/* --- CONFIGURACIÓN BASE --- */
+.test-body {
+    background-color: #f0f2f5;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- CONTENEDOR CENTRAL --- */
+.test-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* --- 1. BARRA DE PROGRESO (WIZARD) --- */
+.progress-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 3rem;
+    width: 100%;
+    max-width: 600px;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    background-color: #e0e0e0;
+    color: #888;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+    border: 2px solid #e0e0e0;
+}
+
+.step-label {
+    font-size: 0.8rem;
+    color: #999;
+    font-weight: 500;
+    text-align: center; /* Asegura centrado en móvil */
+}
+
+/* Estado Activo */
+.step.active .step-circle {
+    background-color: #a80000; /* Rojo Marca */
+    color: white;
+    border-color: #a80000;
+    box-shadow: 0 0 0 4px rgba(168, 0, 0, 0.2);
+}
+
+.step.active .step-label {
+    color: #a80000;
+    font-weight: 700;
+}
+
+/* Línea conectora */
+.step-line {
+    flex: 1;
+    height: 2px;
+    background-color: #e0e0e0;
+    margin: 0 10px;
+    margin-bottom: 20px; /* Ajuste para alinear con el centro del círculo */
+}
+
+/* --- 2. TARJETA DEL TEST --- */
+.test-card {
+    background: white;
+    padding: 1.5rem 1.2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    width: 100%;
+    text-align: center;
+    border-top: 5px solid #a80000;
+}
+
+.card-intro h2 {
+    color: #333;
+    margin-bottom: 0.2rem;
+    font-size: 1.8rem;
+}
+
+.card-intro p {
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+/* --- FORMULARIO --- */
+.student-id-form {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 2rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    color: #444;
+}
+
+.input-icon-wrapper {
+    position: relative;
+}
+
+.input-icon-wrapper i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 1.1rem;
+}
+
+.big-input {
+    width: 100%;
+    padding: 15px 15px 15px 45px; /* Espacio para el icono */
+    font-size: 1.1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    transition: all 0.3s;
+    background-color: #f9f9f9;
+}
+
+.big-input:focus {
+    border-color: #a80000;
+    background-color: white;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(168, 0, 0, 0.1);
+}
+
+.form-group small {
+    display: block;
+    margin-top: 8px;
+    color: #888;
+    font-size: 0.85rem;
+}
+
+/* BOTONES */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.btn-start {
+    background-color: #a80000;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 2; /* En escritorio ocupa el doble que cancelar */
+    justify-content: center;
+}
+
+.btn-start:hover {
+    background-color: #c90000;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(168, 0, 0, 0.3);
+}
+
+.btn-cancel {
+    color: #666;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 10px 20px;
+    flex: 1;
+    text-align: center;
+    white-space: nowrap; /* Evita que el texto se rompa mal */
+}
+
+.btn-cancel:hover {
+    color: #333;
+    text-decoration: underline;
+}
+
+/* =========================================
+   MEDIA QUERIES (RESPONSIVE)
+   ========================================= */
+
+/* Tablets (Hasta 768px) */
+@media (max-width: 768px) {
+    .test-card {
+        padding: 2.5rem 2rem;
+    }
+    
+    .progress-container {
+        margin-bottom: 2.5rem;
+        padding: 0 1rem; /* Margen lateral para que no toque bordes */
+    }
+}
+
+/* Móviles (Hasta 480px) */
+@media (max-width: 480px) {
+    .test-header {
+        padding: 0.8rem 1rem;
+    }
+    
+    .test-header h1 {
+        font-size: 1rem;
+    }
+
+    /* Ajustar contenedor y tarjeta */
+    .test-container {
+        padding: 1rem;
+    }
+
+    .test-card {
+        padding: 1.5rem 1.2rem;
+        border-radius: 12px;
+    }
+
+    .card-intro h2 {
+        font-size: 1.4rem;
+    }
+    
+    .card-intro p {
+        font-size: 0.9rem;
+    }
+
+    /* Ajustar Barra de Progreso */
+    .step-circle {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem; /* Texto más pequeño dentro del círculo */
+    }
+    
+    .step-label {
+        font-size: 0.7rem; /* Etiqueta más pequeña */
+        margin-top: 4px;
+    }
+    
+    .step-line {
+        margin-bottom: 18px; /* Reajuste vertical */
+    }
+
+    /* Botones Apilados */
+    .form-actions {
+        flex-direction: column; /* Uno debajo del otro */
+        gap: 1rem;
+    }
+
+    .btn-start, .btn-cancel {
+        width: 100%; /* Ancho completo */
+        flex: none; /* Desactivar flex-grow */
+        justify-content: center;
+    }
+    
+    .btn-start {
+        padding: 14px;
+    }
+    
+    .btn-cancel {
+        padding: 12px;
+        order: 2; /* Asegura que cancelar quede abajo si cambias el HTML */
+    }
+}

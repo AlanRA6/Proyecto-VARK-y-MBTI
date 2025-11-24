@@ -22,4 +22,5 @@ urlpatterns = [
     path('', include('home.urls')),
     path('vark/', include('VARK.urls')),
     path('mbti/', include('MBTI.urls')),
+    path('teachers/', include('teachers.urls')),
 ]

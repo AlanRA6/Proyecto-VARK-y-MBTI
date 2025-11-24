@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard Docente | Quizzes Solutions{% endblock %}</title>
+    
+    <!-- FontAwesome para iconos modernos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- SweetAlert -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- CSS del Dashboard -->
+    <link rel="stylesheet" href="{% static 'css/base_t.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- NAVBAR FIXED -->
+    <header class="dash-header">
+        <div class="header-content">
+            
+            <!-- 1. MARCA / LOGO + TOGGLE MÓVIL -->
+            <div class="brand-wrapper">
+                <div class="dash-brand">
+                    <span class="brand-icon"><i class="fa-solid fa-shapes"></i></span>
+                    <div class="brand-text">
+                        <h1>Quizzes Solutions</h1>
+                        <span class="badge">Docente</span>
+                    </div>
+                </div>
+
+                <!-- Botón Hamburguesa (Solo visible en Móvil) -->
+                <button class="dash-toggle" id="dashToggle" aria-label="Abrir menú">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- 2. CONTENIDO COLAPSABLE (NAV + USER) -->
+            <div class="dash-collapse" id="dashCollapse">
+                
+                <!-- Navegación Central -->
+                <nav class="dash-nav">
+                    <ul>
+                        <li>
+                            <a href="#" class="dash-link {% if request.resolver_match.url_name == 'teachers_home' %}active{% endif %}">
+                                <i class="fa-solid fa-house"></i> <span>Inicio</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'reports_list' %}" class="dash-link {% if request.resolver_match.url_name == 'reports_list' %}active{% endif %}">
+                                <i class="fa-solid fa-file"></i> <span>Reportes</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{% url 'tokens_view' %}" class="dash-link {% if request.resolver_match.url_name == 'tokens_view' %}active{% endif %}">
+                                <i class="fa-solid fa-key"></i> <span>Tokens</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="dash-link {% if request.resolver_match.url_name == 'search' %}active{% endif %}">
+                                <i class="fa-solid fa-magnifying-glass"></i> <span>Buscar</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- Área de Usuario & Logout -->
+                <div class="user-area">
+                    <div class="user-info">
+                        <span class="user-name">Hola, {{ user.first_name|default:user.username }}</span>
+                        <span class="user-role">Maestro</span>
+                    </div>
+                    
+                    <!-- Botón de Logout -->
+                    <form action="{% url 'logout' %}" method="post" class="logout-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-logout" title="Cerrar Sesión">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            <span class="logout-text-mobile">Cerrar Sesión</span>
+                        </button>
+                    </form>
+                </div>
+
+            </div> <!-- Fin .dash-collapse -->
+
+        </div>
+    </header>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main class="dash-main">
+        {% block content %}
+        <!-- El contenido del dashboard va aquí -->
+        {% endblock %}
+    </main>
+
+    <!-- JS Scripts -->
+    <script src="{% static 'js/base_t.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.26.3/dist/sweetalert2.all.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

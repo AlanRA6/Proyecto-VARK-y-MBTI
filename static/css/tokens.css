@@ -1,0 +1,270 @@
+/* --- LAYOUT GRID --- */
+.tokens-layout {
+    display: grid;
+    grid-template-columns: 350px 1fr; /* Columna fija para form, flexible para lista */
+    gap: 2rem;
+    align-items: start;
+}
+
+/* --- TARJETAS GENERALES --- */
+.token-creator-card,
+.token-list-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #eee;
+    background-color: #fff;
+}
+
+.card-header h3 {
+    font-size: 1.1rem;
+    color: #222;
+    margin-bottom: 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.card-header p {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+/* --- FORMULARIO IZQUIERDO --- */
+.token-form {
+    padding: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: #444;
+    margin-bottom: 0.5rem;
+}
+
+/* Input Group (Input + Botón refrescar) */
+.input-group-append {
+    display: flex;
+}
+
+.code-input {
+    flex: 1;
+    font-family: 'Courier New', monospace; /* Fuente de código */
+    letter-spacing: 1px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-right: none;
+    padding: 10px;
+    border-radius: 4px 0 0 4px;
+    font-size: 0.9rem;
+    color: #a80000;
+    font-weight: bold;
+}
+
+.btn-refresh {
+    padding: 0 15px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    color: #555;
+    transition: all 0.2s;
+}
+
+.btn-refresh:hover {
+    background-color: #ddd;
+    color: #222;
+}
+
+/* Inputs normales */
+input[type="datetime-local"],
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    font-family: inherit;
+}
+
+.select-wrapper {
+    position: relative;
+}
+
+.select-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.hint {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.75rem;
+    color: #999;
+}
+
+.btn-create {
+    width: 100%;
+    background-color: var(--dash-red); /* Variable del dashboard */
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.3s;
+}
+
+.btn-create:hover {
+    background-color: #c90000;
+}
+
+/* --- LISTA DERECHA (TABLA) --- */
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box input {
+    padding: 6px 10px 6px 30px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.search-box i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+    font-size: 0.8rem;
+}
+
+.tokens-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.tokens-table th {
+    text-align: left;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    color: #666;
+    font-weight: 600;
+    border-bottom: 1px solid #eee;
+}
+
+.tokens-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+/* Estilo del token en la tabla */
+.token-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.code-snippet {
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+    color: #333;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.btn-copy {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.btn-copy:hover {
+    color: var(--dash-red);
+}
+
+/* Badges (Etiquetas) */
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-group {
+    background-color: #e3f2fd;
+    color: #1565c0; /* Azul */
+}
+
+.badge-individual {
+    background-color: #f3e5f5;
+    color: #7b1fa2; /* Morado */
+}
+
+.text-danger {
+    color: #d32f2f;
+    font-weight: 500;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.btn-action {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #aaa;
+    padding: 5px;
+    transition: color 0.2s;
+}
+
+.btn-action.delete:hover {
+    color: var(--dash-red);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1024px) {
+    .tokens-layout {
+        grid-template-columns: 1fr; /* Una sola columna */
+    }
+
+    .token-creator-card {
+        margin-bottom: 2rem;
+    }
+}

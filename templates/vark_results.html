@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test VARK | Resultados</title>
+    
+    <!-- Estilos específicos del Test -->
+    <link rel="stylesheet" href="{% static 'css/vark_styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vark_results.css' %}">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="test-body">
+
+    <main class="test-container">
+        
+        <!-- 1. BARRA DE PROGRESO (FINALIZADA) -->
+        <div class="progress-container">
+            <div class="step completed"> <!-- Clase 'completed' visual opcional -->
+                <div class="step-circle" style="background:#333; color:white; border-color:#333;">1</div>
+                <span class="step-label">Tus Datos</span>
+            </div>
+            <div class="step-line" style="background:#333;"></div>
+            <div class="step completed">
+                <div class="step-circle" style="background:#333; color:white; border-color:#333;">2</div>
+                <span class="step-label">Cuestionario</span>
+            </div>
+            <div class="step-line" style="background:#333;"></div>
+            <div class="step active">
+                <div class="step-circle">3</div>
+                <span class="step-label">Resultados</span>
+            </div>
+        </div>
+
+        <!-- 2. TARJETA DE RESULTADOS -->
+        <div class="test-card">
+            <div class="card-intro">
+                <h2><i class="fa-solid fa-graduation-cap"></i> Resultados del Test</h2>
+                <p>Hola <strong>{{ alumno }}</strong>, aquí está el desglose de tu estilo de aprendizaje.</p>
+            </div>
+
+            <div class="results-grid">
+                
+                <!-- VISUAL -->
+                <div class="result-item">
+                    <div class="result-header">
+                        <span><i class="fa-solid fa-eye"></i> Visual</span>
+                        <span class="score-badge">{{ resultado_visual }} pts</span>
+                    </div>
+                    <div class="progress-track">
+                        <!-- Calculamos porcentaje: (Puntaje / 16) * 100 -->
+                        <div class="progress-fill fill-visual" style="width: {% widthratio resultado_visual 16 100 %}%;"></div>
+                    </div>
+                </div>
+
+                <!-- AUDITIVO -->
+                <div class="result-item">
+                    <div class="result-header">
+                        <span><i class="fa-solid fa-ear-listen"></i> Auditivo</span>
+                        <span class="score-badge">{{ resultado_auditivo }} pts</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill fill-aural" style="width: {% widthratio resultado_auditivo 16 100 %}%;"></div>
+                    </div>
+                </div>
+
+                <!-- LECTURA / ESCRITURA -->
+                <div class="result-item">
+                    <div class="result-header">
+                        <span><i class="fa-solid fa-book-open"></i> Lectura / Escritura</span>
+                        <span class="score-badge">{{ resultado_lectura_escritura }} pts</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill fill-read" style="width: {% widthratio resultado_lectura_escritura 16 100 %}%;"></div>
+                    </div>
+                </div>
+
+                <!-- KINESTÉSICO -->
+                <div class="result-item">
+                    <div class="result-header">
+                        <span><i class="fa-solid fa-hand-holding-heart"></i> Kinestésico</span>
+                        <span class="score-badge">{{ resultado_kinestesico }} pts</span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill fill-kinesthetic" style="width: {% widthratio resultado_kinestesico 16 100 %}%;"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-actions" style="margin-top: 2.5rem;">
+                <a href="/" class="btn-start" style="text-decoration: none;">
+                    Finalizar <i class="fa-solid fa-house"></i>
+                </a>
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

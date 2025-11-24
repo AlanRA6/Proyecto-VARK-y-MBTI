@@ -1,0 +1,102 @@
+    /* Estilos específicos para las tablas de reportes */
+    .reports-section {
+        margin-bottom: 3rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        border: 1px solid #e0e0e0;
+        overflow: hidden;
+    }
+
+    .section-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #fff;
+    }
+
+    .section-header h3 {
+        font-size: 1.1rem;
+        color: #222;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .table-container {
+        width: 100%;
+        overflow-x: auto; /* Scroll horizontal en móviles */
+    }
+
+    .report-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+        text-align: left;
+    }
+
+    .report-table th {
+        background-color: #f8f9fa;
+        color: #666;
+        font-weight: 600;
+        padding: 1rem;
+        border-bottom: 2px solid #eee;
+        white-space: nowrap;
+    }
+
+    .report-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+        vertical-align: middle;
+        color: #444;
+    }
+
+    /* Badges para puntajes VARK */
+    .score-badge {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        min-width: 30px;
+        text-align: center;
+        color: #555;
+        background-color: #eee;
+    }
+    
+    /* Colores suaves para identificar columnas */
+    .bg-v { background-color: #fce4ec; color: #c2185b; } /* Rosa */
+    .bg-a { background-color: #e3f2fd; color: #1565c0; } /* Azul */
+    .bg-r { background-color: #e8f5e9; color: #2e7d32; } /* Verde */
+    .bg-k { background-color: #fff3e0; color: #ef6c00; } /* Naranja */
+
+    .student-name {
+        font-weight: 600;
+        color: #222;
+        display: block;
+    }
+    .token-ref {
+        font-size: 0.75rem;
+        color: #888;
+        font-family: monospace;
+    }
+
+    .btn-action {
+        color: #888;
+        cursor: pointer;
+        padding: 5px;
+        transition: color 0.2s;
+        border: none;
+        background: none;
+        font-size: 1rem;
+    }
+    .btn-action:hover { color: #a80000; }
+
+    /* Estado vacío */
+    .empty-state {
+        padding: 3rem;
+        text-align: center;
+        color: #999;
+    }
