@@ -8,9 +8,18 @@
 
 <section class="hero-banner">
     <div class="hero-content">
-        <h2>Descubre el potencial real de tus alumnos</h2>
-        <p>Ofrecemos herramientas de diagnóstico VARK y MBTI para adaptar tu enseñanza y mejorar el rendimiento académico de manera integral.</p>
-        <a href="{% url 'services' %}" class="btn-dark">Ver Servicios</a>
+        <div class="hero-video">
+            <video autoplay muted loop playsinline>
+                <source src="{% static 'video/VideoProyecto.mp4' %}" type="video/mp4">
+                Tu navegador no soporta videos HTML5.
+            </video>
+        </div>
+
+        <div class="hero-text">
+            <h2>Descubre el potencial real de tus alumnos</h2>
+            <p>Ofrecemos herramientas de diagnóstico VARK y MBTI para adaptar tu enseñanza y mejorar el rendimiento académico de manera integral.</p>
+            <a href="{% url 'services' %}" class="btn-dark">Ver Servicios</a>
+        </div>
     </div>
 </section>
 

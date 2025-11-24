@@ -2,21 +2,46 @@
 
 /* 1. HERO SECTION (Rojo degradado) */
 .hero-banner {
-    background: linear-gradient(135deg, #a80000 0%, #d60000 100%); /* Degradado rojo */
+    background: linear-gradient(135deg, #a80000 0%, #d60000 100%);
     color: white;
     padding: 3rem 2rem;
-    text-align: right; /* Texto a la derecha como en la imagen */
-    /* Puedes poner una imagen de fondo sutil aquí si tienes una */
+    /* Quitamos text-align: right general para manejarlo por flexbox */
 }
 
 .hero-content {
     max-width: 1200px;
     margin: 0 auto;
+    
+    /* NUEVO: Flexbox para diseño de columnas */
+    display: flex;
+    flex-direction: column; /* Móvil: Texto arriba, video abajo */
+    gap: 2rem;
+    align-items: center;
 }
 
-.hero-content h2 {
+.hero-video {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3); /* Sombra para darle profundidad */
+    background-color: rgba(0,0,0,0.2); /* Fondo oscuro mientras carga */
+}
+
+.hero-video video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.hero-text {
+    width: 100%;
+    text-align: center; /* Centrado en móvil */
+}
+
+.hero-text h2 {
     font-size: 2rem;
     margin-bottom: 1rem;
+    line-height: 1.2;
 }
 
 .btn-dark {
@@ -28,6 +53,11 @@
     border-radius: 3px;
     display: inline-block;
     margin-top: 1rem;
+    transition: background 0.3s;
+}
+
+.btn-dark:hover {
+    background-color: #444;
 }
 
 /* 2. LAYOUT PRINCIPAL (Sidebar + Contenido) */
@@ -193,6 +223,24 @@ h3 {
         
         /* Espacio entre el texto del sidebar y la línea */
         padding-right: 2rem; 
+    }
+
+    .hero-content {
+        flex-direction: row; /* Escritorio: Lado a lado */
+        justify-content: space-between;
+    }
+
+    .hero-video {
+        flex: 1; /* Ocupa 1 parte */
+        order: 1; /* El video va a la izquierda visualmente (opcional) */
+        max-width: 500px; /* Limite de ancho para que no sea gigante */
+    }
+
+    .hero-text {
+        flex: 1; /* Ocupa 1 parte */
+        text-align: right; /* Restauramos alineación a la derecha en escritorio */
+        padding-left: 2rem;
+        order: 2; /* El texto a la derecha */
     }
 
     .content-right {

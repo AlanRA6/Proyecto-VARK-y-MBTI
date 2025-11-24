@@ -5,6 +5,7 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    margin: 0;
 }
 
 /* --- CONTENEDOR CENTRAL --- */
@@ -13,11 +14,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 2rem 1rem;
+    justify-content: center; /* Centrado vertical */
+    padding: 1rem; /* Reducido para móvil */
     max-width: 800px;
     margin: 0 auto;
     width: 100%;
+    box-sizing: border-box; /* Vital para responsividad */
 }
 
 /* --- 1. BARRA DE PROGRESO (WIZARD) --- */
@@ -36,11 +38,12 @@
     align-items: center;
     position: relative;
     z-index: 2;
+    flex: 1; /* Distribución equitativa */
 }
 
 .step-circle {
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     background-color: #e0e0e0;
     color: #888;
     border-radius: 50%;
@@ -48,29 +51,35 @@
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
     transition: all 0.3s ease;
-    border: 2px solid #e0e0e0;
+    border: 2px solid #f0f2f5; /* Borde del color de fondo para separar de la línea */
+    font-size: 0.9rem;
 }
 
 .step-label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: #999;
     font-weight: 500;
-    text-align: center; /* Asegura centrado en móvil */
+    text-align: center;
 }
 
 /* Estado Activo */
 .step.active .step-circle {
-    background-color: #a80000; /* Rojo Marca */
+    background-color: #a80000;
     color: white;
-    border-color: #a80000;
-    box-shadow: 0 0 0 4px rgba(168, 0, 0, 0.2);
+    box-shadow: 0 0 0 3px rgba(168, 0, 0, 0.2);
 }
 
 .step.active .step-label {
     color: #a80000;
     font-weight: 700;
+}
+
+/* Estado Completado (Opcional, visualmente útil) */
+.step.completed .step-circle {
+    background-color: #28a745; /* Verde éxito */
+    color: white;
 }
 
 /* Línea conectora */
@@ -82,34 +91,51 @@
     margin-bottom: 20px; /* Ajuste para alinear con el centro del círculo */
 }
 
+.progress-container::before {
+    content: '';
+    position: absolute;
+    top: 17px; /* Mitad del círculo */
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background-color: #e0e0e0;
+    z-index: 1;
+}
+
 /* --- 2. TARJETA DEL TEST --- */
 .test-card {
     background: white;
-    padding: 1.5rem 1.2rem;
+    padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
     width: 100%;
-    text-align: center;
+    box-sizing: border-box;
     border-top: 5px solid #a80000;
+    margin-bottom: 2rem;
+}
+
+.card-intro {
+    text-align: center;
+    margin-bottom: 1.5rem;
 }
 
 .card-intro h2 {
     color: #333;
-    margin-bottom: 0.2rem;
-    font-size: 1.8rem;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.6rem;
 }
 
 .card-intro p {
     color: #666;
-    margin-bottom: 1rem;
-    line-height: 1.5;
+    margin: 0;
+    line-height: 1.4;
+    font-size: 0.95rem;
 }
 
 /* --- FORMULARIO --- */
 .student-id-form {
-    max-width: 400px;
+    max-width: 100%; /* Full width en móvil */
     margin: 0 auto;
-    text-align: left;
 }
 
 .form-group {
@@ -213,6 +239,58 @@
 
 /* Tablets (Hasta 768px) */
 @media (max-width: 768px) {
+    .student-id-form { max-width: 400px; }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #444;
+        font-size: 0.9rem;
+    }
+
+    .input-icon-wrapper {
+        position: relative;
+    }
+
+    .input-icon-wrapper i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #999;
+    }
+
+    .big-input {
+        width: 100%;
+        padding: 12px 15px 12px 40px; /* Ajustado */
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        transition: all 0.3s;
+        background-color: #f9f9f9;
+        box-sizing: border-box;
+    }
+
+    .big-input:focus {
+        border-color: #a80000;
+        background-color: white;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(168, 0, 0, 0.1);
+    }
+
+    /* BOTONES */
+    .form-actions {
+        display: flex;
+        flex-direction: column-reverse; /* Móvil: Cancelar abajo */
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
     .test-card {
         padding: 2.5rem 2rem;
     }
@@ -223,6 +301,126 @@
     }
 }
 
+@media (min-width: 600px) {
+    .form-actions {
+        flex-direction: row; /* Escritorio: Lado a lado */
+        align-items: center;
+        }
+
+    .btn-start {
+        background-color: #a80000;
+        color: white;
+        border: none;
+        padding: 14px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .btn-start:hover {
+        background-color: #c90000;
+        transform: translateY(-2px);
+    }
+
+    .btn-cancel {
+        color: #666;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 10px;
+        text-align: center;
+        width: 100%;
+        display: block;
+    }
+
+    /* --- ESTILOS DE PREGUNTAS (RESPONSIVE) --- */
+    .question-block {
+        text-align: left;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 1.5rem;
+    }
+
+    .question-block:last-child {
+        border-bottom: none;
+    }
+
+    .question-title {
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+        line-height: 1.4;
+    }
+
+    .options-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    /* Tarjeta de Opción (Radio Button mejorado para touch) */
+    .option-label {
+        display: flex;
+        align-items: flex-start; /* Alinea arriba por si el texto es largo */
+        gap: 12px;
+        cursor: pointer;
+        padding: 12px 15px;
+        border-radius: 8px;
+        transition: all 0.2s;
+        border: 1px solid #e0e0e0;
+        background-color: #fff;
+        /* Mejora táctil */
+        user-select: none; 
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .option-label:hover {
+        background-color: #fff5f5; /* Rojo muy suave */
+        border-color: #ffcccc;
+    }
+
+    /* Cuando el radio está seleccionado (Truco CSS visual) */
+    .option-label:has(input:checked) {
+        border-color: #a80000;
+        background-color: #fff0f0;
+        font-weight: 500;
+    }
+
+    /* Fallback para navegadores antiguos que no soportan :has */
+    input:checked + span {
+        color: #a80000;
+        font-weight: 600;
+    }
+
+    .option-radio {
+        margin-top: 3px; /* Alineación óptica con el texto */
+        accent-color: #a80000;
+        min-width: 16px; /* Evita que se aplaste */
+        min-height: 16px;
+    }
+
+    .option-text {
+        font-size: 0.95rem;
+        line-height: 1.4;
+        color: #444;
+    }
+
+    /* ANIMACIONES */
+    .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+}
 /* Móviles (Hasta 480px) */
 @media (max-width: 480px) {
     .test-header {
@@ -239,8 +437,7 @@
     }
 
     .test-card {
-        padding: 1.5rem 1.2rem;
-        border-radius: 12px;
+        padding: 1.5rem 1rem;
     }
 
     .card-intro h2 {
@@ -266,6 +463,8 @@
     .step-line {
         margin-bottom: 18px; /* Reajuste vertical */
     }
+
+    .step-circle { width: 30px; height: 30px; font-size: 0.8rem; }
 
     /* Botones Apilados */
     .form-actions {
