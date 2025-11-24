@@ -4,7 +4,6 @@ from .models import (
     FormularioControlMBTI,
     MBTIDimension,
     MBTIRespuestaPregunta,
-    MBTIResultado,
 )
 
 
@@ -15,7 +14,7 @@ class PreguntasMBTIAdmin(admin.ModelAdmin):
 
 @admin.register(FormularioControlMBTI)
 class FormularioControlMBTIAdmin(admin.ModelAdmin):
-    list_display = ("id", "alumno", "fecha_completado", "token")
+    list_display = ("id", "alumno", "fecha_completado", "token", "energia", "informacion", "decisiones", "estilo_vida", "tipo_resultante")
     search_fields = ("alumno__nombre", "token")
     list_filter = ("fecha_completado",)
 
@@ -38,19 +37,3 @@ class MBTIRespuestaPreguntaAdmin(admin.ModelAdmin):
     list_filter = ()
     search_fields = ("control__id",)
 
-
-@admin.register(MBTIResultado)
-class MBTIResultadoAdmin(admin.ModelAdmin):
-    list_display = (
-        "id",
-        "encuestado",
-        "fecha",
-        "control",
-        "tipo_resultante",
-        "energia",
-        "informacion",
-        "decisiones",
-        "estilo_vida",
-    )
-    list_filter = ("tipo_resultante", "energia", "informacion", "decisiones", "estilo_vida")
-    search_fields = ("encuestado__nombre", "tipo_resultante")
