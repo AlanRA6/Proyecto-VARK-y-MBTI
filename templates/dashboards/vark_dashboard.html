@@ -1,0 +1,598 @@
+{% extends "partials/base_t.html" %}
+    {% block extra_css %}
+        <style>
+        .card {
+            border-radius: 10px;
+            border: none;
+        }
+
+        .card-header {
+            border-bottom: 2px solid #f0f0f0;
+            border-radius: 10px 10px 0 0 !important;
+        }
+
+        canvas {
+            max-height: 350px;
+        }
+
+        @media (max-width: 768px) {
+            canvas {
+                max-height: 250px;
+            }
+            
+            .card-body h3 {
+                font-size: 1.5rem;
+            }
+        }
+
+        .opacity-50 {
+            opacity: 0.5;
+        }
+        </style>
+    {% endblock %}
+
+
+{% block content %}
+    <div class="container-fluid py-4">
+        <!-- Encabezado del Dashboard -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h2 class="mb-3">
+                    <i class="fas fa-chart-line me-2"></i>Dashboard VARK - Estilos de Aprendizaje
+                </h2>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <!-- Tipo de vista -->
+                            <div class="col-md-4">
+                                <label for="filtroTipo" class="form-label fw-bold">
+                                    <i class="fas fa-filter me-2"></i>Tipo de Vista
+                                </label>
+                                <select id="filtroTipo" class="form-select">
+                                    <option value="total" {% if filtro == 'total' %}selected{% endif %}>Vista Total</option>
+                                    <option value="individual" {% if filtro == 'individual' %}selected{% endif %}>Individual</option>
+                                    <option value="grupal" {% if filtro == 'grupal' %}selected{% endif %}>Grupal</option>
+                                </select>
+                            </div>
+
+                            <!-- Token específico (Individual) -->
+                            <div class="col-md-4" id="filtroIndividualContainer" style="display: none;">
+                                <label for="filtroIndividual" class="form-label fw-bold">
+                                    <i class="fas fa-user me-2"></i>Token Individual
+                                </label>
+                                <select id="filtroIndividual" class="form-select">
+                                    <option value="">Todos los tokens individuales</option>
+                                    {% for token in tokens_individuales %}
+                                    <option value="{{ token.id }}">{{ token.token }} - {{ token.descripcion }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Token específico (Grupal) -->
+                            <div class="col-md-4" id="filtroGrupalContainer" style="display: none;">
+                                <label for="filtroGrupal" class="form-label fw-bold">
+                                    <i class="fas fa-users me-2"></i>Token Grupal
+                                </label>
+                                <select id="filtroGrupal" class="form-select">
+                                    <option value="">Todos los tokens grupales</option>
+                                    {% for token in tokens_grupales %}
+                                    <option value="{{ token.id }}">{{ token.token }} - {{ token.descripcion }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <!-- Botón aplicar -->
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button id="btnAplicarFiltros" class="btn btn-primary w-100">
+                                    <i class="fas fa-sync-alt me-2"></i>Actualizar Dashboard
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjetas de Resumen -->
+        <div class="row mb-4">
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card bg-primary text-white shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase mb-1">Total Tests</h6>
+                                <h3 class="mb-0" id="totalFormularios">0</h3>
+                            </div>
+                            <i class="fas fa-file-alt fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card bg-success text-white shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase mb-1">Visual</h6>
+                                <h3 class="mb-0" id="promedioVisual">0</h3>
+                                <small>Promedio</small>
+                            </div>
+                            <i class="fas fa-eye fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card bg-info text-white shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase mb-1">Auditivo</h6>
+                                <h3 class="mb-0" id="promedioAuditivo">0</h3>
+                                <small>Promedio</small>
+                            </div>
+                            <i class="fas fa-headphones fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 col-sm-6 mb-3">
+                <div class="card bg-warning text-dark shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-uppercase mb-1">Kinestésico</h6>
+                                <h3 class="mb-0" id="promedioKinestesico">0</h3>
+                                <small>Promedio</small>
+                            </div>
+                            <i class="fas fa-running fa-3x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficas Principal -->
+        <div class="row mb-4">
+            <!-- Gráfica de barras: Comparación de estilos -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-bar me-2 text-primary"></i>
+                            Comparación de Estilos de Aprendizaje
+                        </h5>
+                        <small class="text-muted">Totales acumulados</small>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chartComparacion"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfica de dona: Distribución de estilos dominantes -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-pie me-2 text-success"></i>
+                            Estilos Dominantes
+                        </h5>
+                        <small class="text-muted">Distribución por preferencia principal</small>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chartDistribucion"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Segunda fila de gráficas -->
+        <div class="row mb-4">
+            <!-- Gráfica radar: Perfil promedio -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-spider me-2 text-info"></i>
+                            Perfil Promedio VARK
+                        </h5>
+                        <small class="text-muted">Vista comparativa de promedios</small>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chartRadar"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gráfica de líneas: Evolución temporal -->
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-line me-2 text-warning"></i>
+                            Evolución Temporal
+                        </h5>
+                        <small class="text-muted">Últimos 20 resultados</small>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chartEvolucion"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Estudiantes (solo vista individual) -->
+        <div class="row mb-4" id="topEstudiantesContainer" style="display: none;">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-trophy me-2 text-warning"></i>
+                            Top 5 Estudiantes
+                        </h5>
+                        <small class="text-muted">Basado en puntuación total</small>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chartTopEstudiantes"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="text-center my-5" style="display: none;">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-3 text-muted">Cargando datos del dashboard...</p>
+        </div>
+    </div>
+
+{% endblock %}
+
+    {% block extra_js %}
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Scripts personalizados -->
+    <script>
+        let charts = {};
+
+        // Colores consistentes para VARK
+        const coloresVARK = {
+            visual: '#4CAF50',
+            auditivo: '#2196F3',
+            lectura: '#FF9800',
+            kinestesico: '#9C27B0'
+        };
+
+        // Inicializar al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            configurarFiltros();
+            cargarDatos();
+        });
+
+        // Configurar comportamiento de filtros
+        function configurarFiltros() {
+            const filtroTipo = document.getElementById('filtroTipo');
+            const btnAplicar = document.getElementById('btnAplicarFiltros');
+            
+            filtroTipo.addEventListener('change', function() {
+                mostrarFiltrosEspecificos(this.value);
+            });
+            
+            btnAplicar.addEventListener('click', cargarDatos);
+            
+            // Mostrar filtros iniciales
+            mostrarFiltrosEspecificos(filtroTipo.value);
+        }
+
+        function mostrarFiltrosEspecificos(tipo) {
+            const individualContainer = document.getElementById('filtroIndividualContainer');
+            const grupalContainer = document.getElementById('filtroGrupalContainer');
+            
+            individualContainer.style.display = tipo === 'individual' ? 'block' : 'none';
+            grupalContainer.style.display = tipo === 'grupal' ? 'block' : 'none';
+        }
+
+        // Cargar datos del servidor
+        async function cargarDatos() {
+            const filtroTipo = document.getElementById('filtroTipo').value;
+            let tokenId = '';
+            
+            if (filtroTipo === 'individual') {
+                tokenId = document.getElementById('filtroIndividual').value;
+            } else if (filtroTipo === 'grupal') {
+                tokenId = document.getElementById('filtroGrupal').value;
+            }
+            
+            mostrarSpinner(true);
+            
+            try {
+                const url = `{% url 'dashboard_data' %}?filtro=${filtroTipo}&token_id=${tokenId}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                actualizarDashboard(data, filtroTipo);
+            } catch (error) {
+                console.error('Error al cargar datos:', error);
+                alert('Error al cargar los datos del dashboard');
+            } finally {
+                mostrarSpinner(false);
+            }
+        }
+
+        function mostrarSpinner(mostrar) {
+            document.getElementById('loadingSpinner').style.display = mostrar ? 'block' : 'none';
+        }
+
+        // Actualizar todo el dashboard
+        function actualizarDashboard(data, filtroTipo) {
+            actualizarTarjetasResumen(data);
+            actualizarGraficaComparacion(data.totales);
+            actualizarGraficaDistribucion(data.distribucion);
+            actualizarGraficaRadar(data.promedios);
+            actualizarGraficaEvolucion(data.evolucion);
+            
+            // Mostrar top estudiantes solo en vista individual
+            if (filtroTipo === 'individual' && data.top_estudiantes.length > 0) {
+                document.getElementById('topEstudiantesContainer').style.display = 'block';
+                actualizarGraficaTopEstudiantes(data.top_estudiantes);
+            } else {
+                document.getElementById('topEstudiantesContainer').style.display = 'none';
+            }
+        }
+
+        // Actualizar tarjetas de resumen
+        function actualizarTarjetasResumen(data) {
+            document.getElementById('totalFormularios').textContent = data.total_formularios;
+            document.getElementById('promedioVisual').textContent = data.promedios.visual.toFixed(1);
+            document.getElementById('promedioAuditivo').textContent = data.promedios.auditivo.toFixed(1);
+            document.getElementById('promedioKinestesico').textContent = data.promedios.kinestesico.toFixed(1);
+        }
+
+        // Gráfica de comparación (barras)
+        function actualizarGraficaComparacion(totales) {
+            if (charts.comparacion) charts.comparacion.destroy();
+            
+            const ctx = document.getElementById('chartComparacion').getContext('2d');
+            charts.comparacion = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Visual', 'Auditivo', 'Lectura/Escritura', 'Kinestésico'],
+                    datasets: [{
+                        label: 'Puntuación Total',
+                        data: [
+                            totales.visual || 0,
+                            totales.auditivo || 0,
+                            totales.lectura || 0,
+                            totales.kinestesico || 0
+                        ],
+                        backgroundColor: [
+                            coloresVARK.visual,
+                            coloresVARK.auditivo,
+                            coloresVARK.lectura,
+                            coloresVARK.kinestesico
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Gráfica de distribución (dona)
+        function actualizarGraficaDistribucion(distribucion) {
+            if (charts.distribucion) charts.distribucion.destroy();
+            
+            const ctx = document.getElementById('chartDistribucion').getContext('2d');
+            charts.distribucion = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(distribucion),
+                    datasets: [{
+                        data: Object.values(distribucion),
+                        backgroundColor: [
+                            coloresVARK.visual,
+                            coloresVARK.auditivo,
+                            coloresVARK.lectura,
+                            coloresVARK.kinestesico,
+                            '#E91E63'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Gráfica radar
+        function actualizarGraficaRadar(promedios) {
+            if (charts.radar) charts.radar.destroy();
+            
+            const ctx = document.getElementById('chartRadar').getContext('2d');
+            charts.radar = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Visual', 'Auditivo', 'Lectura/Escritura', 'Kinestésico'],
+                    datasets: [{
+                        label: 'Perfil Promedio',
+                        data: [
+                            promedios.visual,
+                            promedios.auditivo,
+                            promedios.lectura,
+                            promedios.kinestesico
+                        ],
+                        backgroundColor: 'rgba(33, 150, 243, 0.2)',
+                        borderColor: 'rgba(33, 150, 243, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(33, 150, 243, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(33, 150, 243, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Gráfica de evolución temporal
+        function actualizarGraficaEvolucion(evolucion) {
+            if (charts.evolucion) charts.evolucion.destroy();
+            
+            const labels = evolucion.map((e, i) => `Test ${i + 1}`);
+            
+            const ctx = document.getElementById('chartEvolucion').getContext('2d');
+            charts.evolucion = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Visual',
+                            data: evolucion.map(e => e.resultado_visual),
+                            borderColor: coloresVARK.visual,
+                            backgroundColor: coloresVARK.visual + '33',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Auditivo',
+                            data: evolucion.map(e => e.resultado_auditivo),
+                            borderColor: coloresVARK.auditivo,
+                            backgroundColor: coloresVARK.auditivo + '33',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Lectura/Escritura',
+                            data: evolucion.map(e => e.resultado_lectura_escritura),
+                            borderColor: coloresVARK.lectura,
+                            backgroundColor: coloresVARK.lectura + '33',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Kinestésico',
+                            data: evolucion.map(e => e.resultado_kinestesico),
+                            borderColor: coloresVARK.kinestesico,
+                            backgroundColor: coloresVARK.kinestesico + '33',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Gráfica top estudiantes
+        function actualizarGraficaTopEstudiantes(estudiantes) {
+            if (charts.topEstudiantes) charts.topEstudiantes.destroy();
+            
+            const ctx = document.getElementById('chartTopEstudiantes').getContext('2d');
+            charts.topEstudiantes = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: estudiantes.map(e => e.alumno__nombre),
+                    datasets: [
+                        {
+                            label: 'Visual',
+                            data: estudiantes.map(e => e.visual),
+                            backgroundColor: coloresVARK.visual
+                        },
+                        {
+                            label: 'Auditivo',
+                            data: estudiantes.map(e => e.auditivo),
+                            backgroundColor: coloresVARK.auditivo
+                        },
+                        {
+                            label: 'Lectura/Escritura',
+                            data: estudiantes.map(e => e.lectura),
+                            backgroundColor: coloresVARK.lectura
+                        },
+                        {
+                            label: 'Kinestésico',
+                            data: estudiantes.map(e => e.kinestesico),
+                            backgroundColor: coloresVARK.kinestesico
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true
+                        },
+                        y: {
+                            stacked: true
+                        }
+                    }
+                }
+            });
+        }
+        </script>
+    {% endblock %}
